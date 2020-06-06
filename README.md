@@ -1,4 +1,4 @@
-#DirWatcher v2.0
+# DirWatcher v2.0
 
 This will be the future of DirWatcher. Once I have done with this, I will delete the original (bad) one.
 
