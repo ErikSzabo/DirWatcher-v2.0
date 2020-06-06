@@ -1,0 +1,25 @@
+/*****************************************************
+******************* DEFAULT INIT *********************
+******************************************************/
+
+:root {
+	--light-blue: #eaf5ff;
+	--blue: #00529c;
+	--custom-black: #24292e;
+	--background: #f5f7f9;
+}
+
+* {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	background-color: var(--background);
+}
+
+/*****************************************************
+********************* INDEX PAGE *********************
+******************************************************/
