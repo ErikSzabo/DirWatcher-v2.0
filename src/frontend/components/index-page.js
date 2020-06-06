@@ -20,6 +20,7 @@ class IndexPage extends HTMLElement {
 class IndexPageElement extends HTMLElement {
 	constructor() {
 		super();
+		this.url = this.getAttribute('url');
 		this.attachShadow({ mode: 'open' });
 
 		const template = document.createElement('template');
@@ -28,13 +29,28 @@ class IndexPageElement extends HTMLElement {
 
             <div class="w-container">
                 <div class="colored-key">${this.getAttribute('name')}</div>
-                <a href="${this.getAttribute('url')}" class="colored-value">${this.getAttribute('url')}</a>
+				<a target="_blank" href="${this.url}" class="colored-value">
+					${this.url}
+				</a>
             </div>
         `;
 
 		// TODO: a tag helyett main process shell-nek kell küldeni, hogy default browserben nyissa meg!
 		this.shadowRoot.appendChild(template.content.cloneNode(true));
 	}
+
+	connectedCallback() {
+		this.shadowRoot.querySelector('a').addEventListener('click', this.listener);
+	}
+
+	disconnectedCallback() {
+		this.shadowRoot.querySelector('a').removeEventListener('click', this.listener);
+	}
+
+	listener = (e) => {
+		e.preventDefault();
+		require('electron').shell.openExternal(this.url);
+	};
 }
 
 window.customElements.define('index-page', IndexPage);
