@@ -1,0 +1,28 @@
+.w-container {
+	margin: auto;
+	margin-top: 10px;
+	width: 400px;
+	height: 45px;
+	border: 1px solid #b4b4b4;
+	display: flex;
+	align-items: center;
+	background-color: white;
+}
+
+.colored-key {
+	color: var(--blue);
+	font-weight: bold;
+	font-size: 13px;
+	background-color: var(--light-blue);
+	display: inline;
+	padding: 8px;
+	margin-left: 10px;
+}
+
+.colored-value {
+	color: var(--blue);
+	display: inline;
+	font-size: 13px;
+	margin-left: 20px;
+	text-decoration: none;
+}

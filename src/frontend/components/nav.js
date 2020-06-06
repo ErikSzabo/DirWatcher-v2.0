@@ -1,62 +1,23 @@
-const navTemplate = document.createElement('template');
-navTemplate.innerHTML = `
-	<style>
-		.nav-menu {
-			display: flex;
-			width: 100%;
-			height: 75px;
-			align-items: center;
-			background-color: coral;
-			background-color: var(--custom-black);
-		}
-		
-		.nav-item {
-			flex: 1;
-		}
-		
-		.nav-btns {
-			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
-			grid-gap: 40px;
-			padding-right: 30px;
-		}
-		
-		.menu-item {
-			color: white;
-			text-transform: uppercase;
-			font-size: 18px;
-			cursor: pointer;
-		}
-		
-		.nav-title {
-			font-size: 25px;
-			padding-left: 30px;
-			font-weight: 600;
-			color: white;
-			cursor: pointer;
-		}
-		
-		.nav-title > div > span {
-			font-weight: normal;
-			font-size: 20px;
-		}
-	</style>
-
-	<nav class="nav-menu">
-        <div class="nav-title nav-item"><div>DirWatcher <span>v2.0</span></div></div>
-        <div class="nav-btns nav-item">
-            <p class="menu-item logs-menu">Logs</p>
-            <p class="menu-item options-menu">Options</p>
-            <p class="menu-item dashboard-menu">Dashborad</p>
-        </div>
-    </nav>
-`;
-
 class Nav extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
-		this.shadowRoot.appendChild(navTemplate.content.cloneNode(true));
+
+		const template = document.createElement('template');
+		template.innerHTML = `
+			<style>@import "../frontend/component_styles/nav.css";</style>
+
+			<nav class="nav-menu">
+				<div class="nav-title nav-item"><div>DirWatcher <span>v2.0</span></div></div>
+				<div class="nav-btns nav-item">
+					<p class="menu-item logs-menu">Logs</p>
+					<p class="menu-item options-menu">Options</p>
+					<p class="menu-item dashboard-menu">Dashborad</p>
+				</div>
+			</nav>
+		`;
+
+		this.shadowRoot.appendChild(template.content.cloneNode(true));
 	}
 
 	connectedCallback() {

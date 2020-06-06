@@ -1,0 +1,7 @@
+.container {
+	width: 90%;
+	position: absolute;
+	left: 50%;
+	top: 70px;
+	transform: translateX(-50%);
+}
