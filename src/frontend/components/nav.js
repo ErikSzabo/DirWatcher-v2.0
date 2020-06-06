@@ -27,12 +27,6 @@ class Nav extends HTMLElement {
 		this.addDashboardListener();
 	}
 
-	disconnectedCallback() {
-		this.shadowRoot.querySelector('.logs-menu').removeEventListener('click');
-		this.shadowRoot.querySelector('.options-menu').removeEventListener('click');
-		this.shadowRoot.querySelector('.dashboard-menu').removeEventListener('click');
-	}
-
 	addIndexListener() {
 		this.shadowRoot.querySelector('.nav-title').addEventListener('click', () => {
 			document.querySelector('main').innerHTML = `
@@ -62,7 +56,16 @@ class Nav extends HTMLElement {
 	}
 
 	addLogsListener() {
-		this.shadowRoot.querySelector('.logs-menu').addEventListener('click', () => {});
+		this.shadowRoot.querySelector('.logs-menu').addEventListener('click', () => {
+			// TODO: legyen dinamikus, mindig a main processtől kérje
+			document.querySelector('main').innerHTML = `
+				<log-page>
+					<log-list-item name="test log file name" date-string="2020/06/06"></log-list-item> 
+					<log-list-item name="test log file name" date-string="2020/06/06"></log-list-item> 
+					<log-list-item name="test log file name" date-string="2020/06/06"></log-list-item> 
+    			</log-page>
+			`;
+		});
 	}
 
 	addDashboardListener() {
