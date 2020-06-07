@@ -72,7 +72,7 @@ class Nav extends HTMLElement {
 		this.shadowRoot.querySelector('.dashboard-menu').addEventListener('click', () => {
 			// TODO: make this dynamic
 			document.querySelector('main').innerHTML = `
-				<dashboard-page>
+				<dashboard-page id="dashboard">
 					<root-folder name="Downloads" id="3456HFJK3F35FJ">
 						<sub-folder class="hide" name="test" parent-id="3456HFJK3F35FJ" id="0"></sub-folder>
 						<sub-folder class="hide" name="test2" parent-id="3456HFJK3F35FJ" id="1"></sub-folder>

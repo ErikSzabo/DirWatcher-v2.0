@@ -39,7 +39,13 @@ class DashboradPage extends HTMLElement {
 	};
 
 	addListener = () => {
-		// TODO: main processnek elküldeni, hogy szortírozza a mappákat.
+		const path = this.shadowRoot.querySelector('input').value;
+		require('electron').ipcRenderer.invoke('add:root', path).then((folder) => {
+			if (!folder) return;
+			document.querySelector('#dashboard').innerHTML += `
+				<root-folder name="${folder.name}" id="${folder._id}"></root-folder>
+			`;
+		});
 	};
 }
 

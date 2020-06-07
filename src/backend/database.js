@@ -14,11 +14,11 @@ function saveOptions(options) {
 }
 
 async function saveRootFolder(rootFolder) {
-	return await this._rootDB.insert(rootFolder);
+	return await rootDB.insert(rootFolder);
 }
 
 async function saveSubFolder(subFolder) {
-	return await this._subDB.insert(subFolder);
+	return await subDB.insert(subFolder);
 }
 
 async function getRootFolder(id) {

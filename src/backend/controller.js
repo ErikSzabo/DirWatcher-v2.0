@@ -39,7 +39,7 @@ ipcMain.handle('get:all:sub', async (e) => {
 ipcMain.handle('add:root', async (e, path) => {
 	// Check if it's already exists
 	const result = await getRootByPath(path);
-	if (result) return false;
+	if (result.length > 0) return false;
 
 	// Add it to the database
 	const splitPath = path.split('\\');
