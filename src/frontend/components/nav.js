@@ -69,21 +69,25 @@ class Nav extends HTMLElement {
 	}
 
 	addDashboardListener() {
-		this.shadowRoot.querySelector('.dashboard-menu').addEventListener('click', () => {
-			// TODO: make this dynamic
-			document.querySelector('main').innerHTML = `
-				<dashboard-page id="dashboard">
-					<root-folder name="Downloads" id="3456HFJK3F35FJ">
-						<sub-folder class="hide" name="test" parent-id="3456HFJK3F35FJ" id="0"></sub-folder>
-						<sub-folder class="hide" name="test2" parent-id="3456HFJK3F35FJ" id="1"></sub-folder>
-						<sub-folder class="hide" name="test3" parent-id="3456HFJK3F35FJ" id="2"></sub-folder>
-					</root-folder>
-					<root-folder name="Desktop" id="3456HFJK3F35FK"></root-folder>
-					<root-folder name="Videos" id="3456HFJK3F35FL">
-						<sub-folder class="hide" name="test" parent-id="3456HFJK3F35FL" id="3"></sub-folder>
-					</root-folder>
-				</dashboard-page>
-			`;
+		this.shadowRoot.querySelector('.dashboard-menu').addEventListener('click', async () => {
+			const { ipcRenderer } = require('electron');
+			const rootData = await ipcRenderer.invoke('get:all:root');
+			const subData = await ipcRenderer.invoke('get:all:sub');
+			let html = '<dashboard-page id="dashboard">';
+
+			for (let root of rootData) {
+				html += `<root-folder name="${root.name}" id="${root._id}"></root-folder>`;
+				for (let sub of subData) {
+					if (sub.parentID === root._id) {
+						html += `<sub-folder class="hide" name="${sub.name}" parent-id="${root._id}" id="${sub._id}"></sub-folder>`;
+					}
+				}
+				html += '</root-folder>';
+			}
+
+			html += '</dashboard-page>';
+
+			document.querySelector('main').innerHTML = html;
 		});
 	}
 }
