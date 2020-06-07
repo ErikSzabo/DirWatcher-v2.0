@@ -14,7 +14,7 @@ let appIcon, mainWindow;
 const createWindow = () => {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
-		width: 800,
+		width: 1600,
 		height: 600,
 		title: 'DirWatcher',
 		resizable: false,
