@@ -1,5 +1,6 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, Tray } = require('electron');
 const path = require('path');
+const { state } = require('./backend/state');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -7,9 +8,11 @@ if (require('electron-squirrel-startup')) {
 	app.quit();
 }
 
+let appIcon, mainWindow;
+
 const createWindow = () => {
 	// Create the browser window.
-	const mainWindow = new BrowserWindow({
+	mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
 		title: 'DirWatcher',
@@ -23,6 +26,33 @@ const createWindow = () => {
 	// and load the index.html of the app.
 	mainWindow.loadFile(path.join(__dirname, './frontend/index.html'));
 	Menu.setApplicationMenu(null);
+
+	mainWindow.on('minimize', (event) => {
+		event.preventDefault();
+		mainWindow.hide();
+	});
+
+	appIcon = new Tray(path.join(__dirname, `/images/icon.ico`));
+
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: 'Open App',
+			click: function() {
+				mainWindow.show();
+			}
+		},
+		{
+			label: 'Quit',
+			click: function() {
+				app.quit();
+			}
+		}
+	]);
+
+	appIcon.setContextMenu(contextMenu);
+	appIcon.on('click', (event) => {
+		mainWindow.show();
+	});
 
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
@@ -48,6 +78,13 @@ app.on('activate', () => {
 	if (BrowserWindow.getAllWindows().length === 0) {
 		createWindow();
 	}
+});
+
+// Sets the autostart option before application quits.
+app.on('quit', () => {
+	app.setLoginItemSettings({
+		openAtLogin: state.options.autoStart
+	});
 });
 
 // In this file you can include the rest of your app's specific main process

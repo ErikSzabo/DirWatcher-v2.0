@@ -1,5 +1,5 @@
-import { getRootFolder, getSubFolder, getSubFolders } from './database';
-import fs from 'fs';
+const { getRootFolder, getSubFolder, getSubFolders } = require('./database');
+const fs = require('fs');
 
 class Watcher {
 	constructor(id) {
@@ -18,7 +18,7 @@ class Watcher {
 	}
 }
 
-export class RootWatcher extends Watcher {
+class RootWatcher extends Watcher {
 	constructor(id) {
 		super();
 	}
@@ -32,7 +32,7 @@ export class RootWatcher extends Watcher {
 	}
 }
 
-export class SubWatcher extends Watcher {
+class SubWatcher extends Watcher {
 	constructor(id) {
 		super();
 	}
@@ -45,12 +45,12 @@ export class SubWatcher extends Watcher {
 	}
 }
 
-export const types = {
+const types = {
 	ROOT: 0,
 	SUB: 1
 };
 
-export class WatcherSystem {
+class WatcherSystem {
 	constructor() {
 		this._root = new Map();
 		this._sub = new Map();
@@ -82,3 +82,10 @@ export class WatcherSystem {
 		}
 	}
 }
+
+module.exports = {
+	RootWatcher,
+	SubWatcher,
+	WatcherSystem,
+	types
+};
