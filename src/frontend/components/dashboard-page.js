@@ -53,6 +53,7 @@ class RootFolder extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
+		this.id = this.getAttribute('id');
 		this.name = this.getAttribute('name');
 		// This element should always has an id which is identical to
 		// its neDB database id
@@ -92,11 +93,23 @@ class RootFolder extends HTMLElement {
 	organizeListener = () => {
 		// TODO: Send msg to main to handle folder organizing
 	};
-	addListener = () => {
-		// TODO: Send msg to main to add root folder to the database
+	addListener = async () => {
+		const { ipcRenderer } = require('electron');
+		const path = await ipcRenderer.invoke('open:explorer');
+		if (!path) return;
+		const rootID = this.id;
+		const sub = await ipcRenderer.invoke('add:sub', { rootID, path });
+		if (!sub) return;
+		for (const child of this.children) {
+			child.classList.remove('hide');
+		}
+		this.innerHTML += `
+			<sub-folder name="${sub.name}" parent-id="${this.id}" id="${sub._id}"></sub-folder>
+		`;
 	};
 	deleteListener = () => {
-		// TODO: Send msg to main to delete the folder from the database
+		require('electron').ipcRenderer.send('delete:root', this.id);
+		this.remove();
 	};
 	toggleListener = () => {
 		for (let child of this.children) {
@@ -146,7 +159,8 @@ class SubFolder extends HTMLElement {
 		// TODO: Send msg to main to open new window which opens a new window for editing
 	};
 	deleteListener = () => {
-		// TODO: Send msg to main to delete the folder from the database
+		require('electron').ipcRenderer.send('delete:sub', this.id);
+		this.remove();
 	};
 }
 

@@ -53,7 +53,8 @@ ipcMain.handle('add:root', async (e, path) => {
  */
 ipcMain.handle('add:sub', async (e, { rootID, path }) => {
 	// Check if already connected to the root
-	for (let subFolder of await getSubsByPath(path)) {
+	const subFolders = await getSubsByPath(path);
+	for (let subFolder of subFolders) {
 		if (subFolder.parentID === rootID) return false;
 	}
 
@@ -69,6 +70,7 @@ ipcMain.handle('add:sub', async (e, { rootID, path }) => {
  */
 ipcMain.on('delete:root', (e, id) => {
 	deleteRootFolder(id);
+	deleteSubFolders(id);
 });
 
 /**

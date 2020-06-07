@@ -34,7 +34,7 @@ async function getSubFolder(id) {
 }
 
 async function getSubsByPath(path) {
-	return await subDB.findOne({ _id: id });
+	return await subDB.find({ path: path });
 }
 
 async function getSubFolders(rootID) {
@@ -50,7 +50,7 @@ function deleteSubFolder(id) {
 }
 
 function deleteSubFolders(rootID) {
-	subDB.remove({ parentID: rootID });
+	subDB.remove({ parentID: rootID }, { multi: true });
 }
 
 async function loadAllRoots() {

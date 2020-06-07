@@ -76,7 +76,7 @@ class Nav extends HTMLElement {
 			let html = '<dashboard-page id="dashboard">';
 
 			for (let root of rootData) {
-				html += `<root-folder name="${root.name}" id="${root._id}"></root-folder>`;
+				html += `<root-folder name="${root.name}" id="${root._id}">`;
 				for (let sub of subData) {
 					if (sub.parentID === root._id) {
 						html += `<sub-folder class="hide" name="${sub.name}" parent-id="${root._id}" id="${sub._id}"></sub-folder>`;
