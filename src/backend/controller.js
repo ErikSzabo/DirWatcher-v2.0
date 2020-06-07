@@ -16,7 +16,6 @@ const {
 	loadAllRoots,
 	loadAllSubs
 } = require('./database');
-import { stat } from 'fs';
 
 /**
  * Fired when application starts to initalize the UI.
@@ -61,7 +60,7 @@ ipcMain.handle('add:sub', async (e, { rootID, path }) => {
 	// Add it to the database
 	const splitPath = path.split('\\');
 	const name = splitPath[splitPath.length - 1];
-	return await saveSubFolder({ path: path, name: name, parentID: rootID });
+	return await saveSubFolder({ path: path, name: name, parentID: rootID, extensions: [] });
 });
 
 /**
@@ -87,7 +86,4 @@ ipcMain.handle('get:options', () => {
 ipcMain.on('change:options', (e, options) => {
 	state.options = options;
 	saveOptions(options);
-
-	if (options.autoStart) {
-	}
 });
