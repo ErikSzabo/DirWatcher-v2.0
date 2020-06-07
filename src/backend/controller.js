@@ -1,4 +1,4 @@
-const { ipcMain } = require('electron');
+const { ipcMain, dialog } = require('electron');
 const { state } = require('./state');
 const { RootWatcher, SubWatcher, types } = require('./watcher');
 const {
@@ -79,11 +79,29 @@ ipcMain.on('delete:sub', (e, id) => {
 	deleteSubFolder(id);
 });
 
+/**
+ * Fired when anything in the renderer process tries
+ * to access the current options.
+ */
 ipcMain.handle('get:options', () => {
 	return state.options;
 });
 
+/**
+ * Fired when user change an option at the options page
+ */
 ipcMain.on('change:options', (e, { key, value }) => {
 	state.options[key] = value;
 	saveOptions(state.options);
+});
+
+/**
+ * Fired when user clicks on Browse button at the dashboard page
+ */
+ipcMain.handle('open:explorer', async () => {
+	const result = await dialog.showOpenDialog({
+		properties: [ 'openDirectory' ]
+	});
+
+	return result.filePaths[0];
 });

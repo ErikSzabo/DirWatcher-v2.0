@@ -32,7 +32,10 @@ class DashboradPage extends HTMLElement {
 	}
 
 	browseListener = () => {
-		// TODO: main processnek elküldeni, hogy nyissa meg az explorert.
+		require('electron').ipcRenderer.invoke('open:explorer').then((path) => {
+			if (!path) return;
+			this.shadowRoot.querySelector('input').value = path;
+		});
 	};
 
 	addListener = () => {
