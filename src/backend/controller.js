@@ -83,7 +83,7 @@ ipcMain.handle('get:options', () => {
 	return state.options;
 });
 
-ipcMain.on('change:options', (e, options) => {
-	state.options = options;
-	saveOptions(options);
+ipcMain.on('change:options', (e, { key, value }) => {
+	state.options[key] = value;
+	saveOptions(state.options);
 });

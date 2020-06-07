@@ -1,6 +1,8 @@
 class OptionItem extends HTMLElement {
 	constructor() {
 		super();
+		this.id = this.getAttribute('id');
+
 		this.attachShadow({ mode: 'open' });
 
 		const template = document.createElement('template');
@@ -14,9 +16,8 @@ class OptionItem extends HTMLElement {
                         <slot />
                     </div>
                     <div class="btn-selector">
-                        <select id="option-selector">
-                            <option value="enabled">Enabled</option>
-                            <option value="enabled" selected>Disabled</option>
+						<select id="option-selector">
+							
                         </select>
                     </div>
                 </div>
@@ -27,16 +28,24 @@ class OptionItem extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.shadowRoot.querySelector('#option-selector').addEventListener('change', () => {
-			// TODO: this.getAttribute('id') üzenettel küldjön üzit a main processnek
-			//       hogy módosítsa a beállítást
-			// az id és az options.json key meg kell, hogy egyezzen
+		require('electron').ipcRenderer.invoke('get:options').then((options) => {
+			this.shadowRoot.querySelector('#option-selector').innerHTML = `
+				<option value="d">Disabled</option>
+				<option value="e" ${options[this.id] ? 'selected' : ''}>Enabled</option>
+			`;
 		});
+		this.shadowRoot.querySelector('#option-selector').addEventListener('change', this.listener);
 	}
 
 	disconnectedCallback() {
-		this.shadowRoot.querySelector('#option-selector').removeEventListener('change');
+		this.shadowRoot.querySelector('#option-selector').removeEventListener('change', this.listener);
 	}
+
+	listener = () => {
+		const key = this.id;
+		const value = this.shadowRoot.querySelector('#option-selector').value === 'e' ? true : false;
+		require('electron').ipcRenderer.send('change:options', { key, value });
+	};
 }
 
 class OptionsPage extends HTMLElement {

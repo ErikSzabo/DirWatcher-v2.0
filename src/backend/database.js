@@ -10,7 +10,7 @@ function loadOptions() {
 }
 
 function saveOptions(options) {
-	fs.writeFile(path.resolve(__dirname, 'options.json'), JSON.stringify(options));
+	fs.writeFileSync(path.resolve(__dirname, 'options.json'), JSON.stringify(options));
 }
 
 async function saveRootFolder(rootFolder) {

@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, Tray } = require('electron');
 const path = require('path');
 const { state } = require('./backend/state');
+const controller = require('./backend/controller');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
