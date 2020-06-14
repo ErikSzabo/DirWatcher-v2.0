@@ -45,7 +45,12 @@ ipcMain.handle('add:root', async (e, path) => {
 	// Add it to the database
 	const splitPath = path.split('\\');
 	const name = splitPath[splitPath.length - 1];
-	return await saveRootFolder({ path: path, name: name });
+	const rootFolder = await saveRootFolder({ path: path, name: name });
+
+	// Create a watcher for the folder
+	state.watchers.addWatcher(types.ROOT, new RootWatcher(rootFolder._id));
+
+	return rootFolder;
 });
 
 /**
@@ -62,7 +67,12 @@ ipcMain.handle('add:sub', async (e, { rootID, path }) => {
 	// Add it to the database
 	const splitPath = path.split('\\');
 	const name = splitPath[splitPath.length - 1];
-	return await saveSubFolder({ path: path, name: name, parentID: rootID, extensions: [] });
+	const subFolder = await saveSubFolder({ path: path, name: name, parentID: rootID, extensions: [] });
+
+	// Create a watcher for the folder
+	state.watchers.addWatcher(types.SUB, new SubWatcher(subFolder._id));
+
+	return subFolder;
 });
 
 /**
@@ -70,6 +80,7 @@ ipcMain.handle('add:sub', async (e, { rootID, path }) => {
  * id will be the id of the root folder in the database.
  */
 ipcMain.on('delete:root', (e, id) => {
+	state.watchers.deleteWatcher(types.ROOT, id);
 	deleteRootFolder(id);
 	deleteSubFolders(id);
 });
@@ -79,6 +90,7 @@ ipcMain.on('delete:root', (e, id) => {
  * id will be the id of the sub folder in the database.
  */
 ipcMain.on('delete:sub', (e, id) => {
+	state.watchers.deleteWatcher(types.SUB, id);
 	deleteSubFolder(id);
 });
 
@@ -103,7 +115,7 @@ ipcMain.on('change:options', (e, { key, value }) => {
  */
 ipcMain.handle('open:explorer', async () => {
 	const result = await dialog.showOpenDialog({
-		properties: [ 'openDirectory' ]
+		properties: ['openDirectory']
 	});
 
 	return result.filePaths[0];
