@@ -65,7 +65,7 @@ export class Nav extends LitElement {
 	indexListener() {
 		document.querySelector('main').innerHTML = `
 				<index-page>
-					<index-page-element name="github" url="https://github.com/ErikSzabo/digital-circuitsv2.0"></index-page-element>
+					<index-page-element name="github" url="https://github.com/ErikSzabo/DirWatcher-v2.0"></index-page-element>
 					<index-page-element name="author" url="https://github.com/ErikSzabo"></index-page-element>
 				</index-page>
 		`;
