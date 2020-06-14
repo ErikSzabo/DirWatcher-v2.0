@@ -39,8 +39,10 @@ class DashboradPage extends HTMLElement {
 	};
 
 	addListener = () => {
-		const path = this.shadowRoot.querySelector('input').value;
+		const inputField = this.shadowRoot.querySelector('input');
+		const path = inputField.value;
 		require('electron').ipcRenderer.invoke('add:root', path).then((folder) => {
+			inputField.value = "";
 			if (!folder) return;
 			document.querySelector('#dashboard').innerHTML += `
 				<root-folder name="${folder.name}" id="${folder._id}"></root-folder>
