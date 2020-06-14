@@ -1,50 +1,91 @@
-class IndexPage extends HTMLElement {
+import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
+
+export class IndexPage extends LitElement {
 	constructor() {
 		super();
-		this.attachShadow({ mode: 'open' });
+	}
 
-		const template = document.createElement('template');
-		template.innerHTML = `
-            <style>@import "../frontend/component_styles/index-page.css";</style>
+	static get styles() {
+		return css`
+			.index-container {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				width: 465px;
+				transform: translate(-50%, -50%);
+			}
 
-            <div class="index-container">
-                <h1 class="welcome">Welcome to DirWatcher!</h1>
-                <slot />
-            </div>
-        `;
+			.welcome {
+				font-size: 40px;
+				width: 465px;
+			}
+		`;
+	}
 
-		this.shadowRoot.appendChild(template.content.cloneNode(true));
+	render() {
+		return html`
+			<div class="index-container">
+				<h1 class="welcome">Welcome to DirWatcher!</h1>
+				<slot />
+			</div>
+		`;
 	}
 }
 
-class IndexPageElement extends HTMLElement {
+export class IndexPageElement extends LitElement {
 	constructor() {
 		super();
-		this.url = this.getAttribute('url');
-		this.attachShadow({ mode: 'open' });
+	}
 
-		const template = document.createElement('template');
-		template.innerHTML = `
-            <style>@import "../frontend/component_styles/index-page-element.css";</style>
+	static get properties() {
+		return {
+			url: { type: String },
+			name: { type: String }
+		};
+	}
 
-            <div class="w-container">
-                <div class="colored-key">${this.getAttribute('name')}</div>
-				<a target="_blank" href="${this.url}" class="colored-value">
+	static get styles() {
+		return css`
+			.w-container {
+				margin: auto;
+				margin-top: 10px;
+				width: 400px;
+				height: 45px;
+				border: 1px solid #b4b4b4;
+				display: flex;
+				align-items: center;
+				background-color: white;
+			}
+
+			.colored-key {
+				color: var(--blue);
+				font-weight: bold;
+				font-size: 13px;
+				background-color: var(--light-blue);
+				display: inline;
+				padding: 8px;
+				margin-left: 10px;
+			}
+
+			.colored-value {
+				color: var(--blue);
+				display: inline;
+				font-size: 13px;
+				margin-left: 20px;
+				text-decoration: none;
+			}
+		`;
+	}
+
+	render() {
+		return html`
+			<div class="w-container">
+				<div class="colored-key">${this.name}</div>
+				<a @click="${this.listener}" target="_blank" href="${this.url}" class="colored-value">
 					${this.url}
 				</a>
-            </div>
-        `;
-
-		// TODO: a tag helyett main process shell-nek kell küldeni, hogy default browserben nyissa meg!
-		this.shadowRoot.appendChild(template.content.cloneNode(true));
-	}
-
-	connectedCallback() {
-		this.shadowRoot.querySelector('a').addEventListener('click', this.listener);
-	}
-
-	disconnectedCallback() {
-		this.shadowRoot.querySelector('a').removeEventListener('click', this.listener);
+			</div>
+		`;
 	}
 
 	listener = (e) => {
@@ -52,6 +93,3 @@ class IndexPageElement extends HTMLElement {
 		require('electron').shell.openExternal(this.url);
 	};
 }
-
-window.customElements.define('index-page', IndexPage);
-window.customElements.define('index-page-element', IndexPageElement);

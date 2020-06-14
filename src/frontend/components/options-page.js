@@ -1,44 +1,66 @@
-class OptionItem extends HTMLElement {
+import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
+
+export class OptionItem extends LitElement {
 	constructor() {
 		super();
-		this.id = this.getAttribute('id');
-
-		this.attachShadow({ mode: 'open' });
-
-		const template = document.createElement('template');
-		template.innerHTML = `
-            <style>@import "../frontend/component_styles/option-list-item.css";</style>
-        
-            <div class="item">
-                <div class="title">${this.getAttribute('title')}</div>
-                <div class="sub">
-                    <div class="description">
-                        <slot />
-                    </div>
-                    <div class="btn-selector">
-						<select id="option-selector">
-							
-                        </select>
-                    </div>
-                </div>
-            </div> 
-        `;
-
-		this.shadowRoot.appendChild(template.content.cloneNode(true));
-	}
-
-	connectedCallback() {
 		require('electron').ipcRenderer.invoke('get:options').then((options) => {
 			this.shadowRoot.querySelector('#option-selector').innerHTML = `
 				<option value="d">Disabled</option>
 				<option value="e" ${options[this.id] ? 'selected' : ''}>Enabled</option>
 			`;
 		});
-		this.shadowRoot.querySelector('#option-selector').addEventListener('change', this.listener);
 	}
 
-	disconnectedCallback() {
-		this.shadowRoot.querySelector('#option-selector').removeEventListener('change', this.listener);
+	static get properties() {
+		return {
+			title: { type: String }
+		};
+	}
+
+	static get styles() {
+		return css`
+			.title {
+				font-size: 18px;
+				font-weight: bold;
+				margin-bottom: 5px;
+			}
+
+			.description {
+				font-size: 14px;
+				text-align: justify;
+			}
+
+			.item {
+				flex-direction: column;
+				margin: 40px 0;
+			}
+
+			#option-selector {
+				width: 100px;
+				padding: 3px;
+				margin-top: 5px;
+				position: relative;
+				left: 0;
+			}
+		`;
+	}
+
+	render() {
+		return html`
+			<div class="item">
+				<div class="title">${this.title}</div>
+				<div class="sub">
+					<div class="description">
+						<slot />
+					</div>
+					<div class="btn-selector">
+						<select @change="${this.listener}" id="option-selector">
+							
+						</select>
+					</div>
+				</div>
+			</div> 
+		`;
 	}
 
 	listener = () => {
@@ -48,23 +70,28 @@ class OptionItem extends HTMLElement {
 	};
 }
 
-class OptionsPage extends HTMLElement {
+export class OptionsPage extends LitElement {
 	constructor() {
 		super();
-		this.attachShadow({ mode: 'open' });
+	}
 
-		const template = document.createElement('template');
-		template.innerHTML = `
-            <style>@import "../frontend/component_styles/options-page.css";</style>
+	static get styles() {
+		return css`
+			.container {
+				width: 90%;
+				position: absolute;
+				left: 50%;
+				top: 70px;
+				transform: translateX(-50%);
+			}
+		`;
+	}
 
-            <div class="container">
-                <slot />
-            </div>
-        `;
-
-		this.shadowRoot.appendChild(template.content.cloneNode(true));
+	render() {
+		return html`
+			<div class="container">
+				<slot />
+			</div>
+		`;
 	}
 }
-
-window.customElements.define('options-page', OptionsPage);
-window.customElements.define('option-item', OptionItem);
