@@ -27,16 +27,16 @@ class RootWatcher extends Watcher {
 	async start() {
 		const folder = await getRootFolder(this._id);
 		this._watcher = fs.watch(folder.path, async (event, filename) => {
-			if (!fs.existsSync(folder.path + "\\" + filename)) return
+			if (!fs.existsSync(folder.path + '\\' + filename)) return;
 			const subFolders = await getSubFolders(this._id);
-			const extension = filename.split(".").pop();
+			const extension = filename.split('.').pop();
 			for (const subFolder of subFolders) {
 				if (!subFolder.extensions.includes(extension)) {
 					// TODO: log the new file
 					continue;
 				}
 
-				fs.rename(folder.path + "\\" + filename, subFolder.path + "\\" + filename, (error) => {
+				fs.rename(folder.path + '\\' + filename, subFolder.path + '\\' + filename, (error) => {
 					if (state.options.folderMonitoring) {
 						if (error) {
 							// TODO: log the error
@@ -44,7 +44,7 @@ class RootWatcher extends Watcher {
 						}
 						// TODO: log the changes
 					}
-				})
+				});
 
 				return;
 			}
@@ -61,7 +61,7 @@ class SubWatcher extends Watcher {
 		const folder = await getSubFolder(this._id);
 		this._watcher = fs.watch(folder.path, (event, filename) => {
 			if (!state.options.folderMonitoring) return;
-			console.log('working')
+			console.log('working');
 			// TODO: log the changes
 		});
 	}
@@ -103,19 +103,19 @@ class WatcherSystem {
 	}
 
 	startAll() {
-		for (watcher of this._root.values) {
+		for (const watcher of this._root.values()) {
 			watcher.start();
 		}
-		for (watcher of this._sub.values) {
+		for (const watcher of this._sub.values()) {
 			watcher.start();
 		}
 	}
 
 	stopAll() {
-		for (watcher of this._root.values()) {
+		for (const watcher of this._root.values()) {
 			watcher.stop();
 		}
-		for (watcher of this._sub.values()) {
+		for (const watcher of this._sub.values()) {
 			watcher.stop();
 		}
 	}
