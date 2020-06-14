@@ -7,7 +7,7 @@ export class IndexPage extends LitElement {
 
 	static get styles() {
 		return css`
-			.index-container {
+			div {
 				position: absolute;
 				left: 50%;
 				top: 50%;
@@ -15,7 +15,7 @@ export class IndexPage extends LitElement {
 				transform: translate(-50%, -50%);
 			}
 
-			.welcome {
+			h1 {
 				font-size: 40px;
 				width: 465px;
 			}
@@ -24,8 +24,8 @@ export class IndexPage extends LitElement {
 
 	render() {
 		return html`
-			<div class="index-container">
-				<h1 class="welcome">Welcome to DirWatcher!</h1>
+			<div>
+				<h1>Welcome to DirWatcher!</h1>
 				<slot />
 			</div>
 		`;
@@ -67,7 +67,7 @@ export class IndexPageElement extends LitElement {
 				margin-left: 10px;
 			}
 
-			.colored-value {
+			a {
 				color: var(--blue);
 				display: inline;
 				font-size: 13px;
@@ -81,7 +81,7 @@ export class IndexPageElement extends LitElement {
 		return html`
 			<div class="w-container">
 				<div class="colored-key">${this.name}</div>
-				<a @click="${this.listener}" target="_blank" href="${this.url}" class="colored-value">
+				<a @click="${this.listener}" target="_blank" href="${this.url}">
 					${this.url}
 				</a>
 			</div>

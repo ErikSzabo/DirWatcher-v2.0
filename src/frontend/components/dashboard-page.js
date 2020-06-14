@@ -54,8 +54,8 @@ export class DashboradPage extends LitElement {
 			<p>Add root folder</p>
 			<div class="start">
 				<input type="text" placeholder="Absolute/path/to/folder/click/browse">
-				<div @click="${this.browseListener}" class="btn browse">Browse</div>
-				<div @click="${this.addListener}" class="btn add">Add</div>
+				<div @click="${this.browseListener}" class="btn">Browse</div>
+				<div @click="${this.addListener}" class="btn">Add</div>
 			</div>
 			<slot />
 		</div>
@@ -141,9 +141,9 @@ export class RootFolder extends LitElement {
 		<div class="container">
 			<div class="start">
 				<div @click="${this.toggleListener}" class="name">${this.name}</div>
-				<div @click="${this.organizeListener}" class="btn organize">Organize</div>
-				<div @click="${this.addListener}" class="btn add">Add Sub</div>
-				<div @click="${this.deleteListener}" class="btn delete">Delete</div>
+				<div @click="${this.organizeListener}" class="btn">Organize</div>
+				<div @click="${this.addListener}" class="btn">Add Sub</div>
+				<div @click="${this.deleteListener}" class="btn">Delete</div>
 			</div>
 			<slot />
 		</div>
@@ -172,17 +172,17 @@ export class RootFolder extends LitElement {
 		this.remove();
 	};
 	toggleListener = () => {
-		for (let child of this.children) {
+		for (const child of this.children) {
 			child.classList.toggle('hide');
 		}
 	};
 }
 
 export class SubFolder extends LitElement {
+	// This element should always has an id which is identical to
+	// its neDB database id as well as its parent id
 	constructor() {
 		super();
-		// This element should always has an id which is identical to
-		// its neDB database id as well as its parent id
 	}
 
 	static get properties() {

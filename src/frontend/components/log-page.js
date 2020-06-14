@@ -33,7 +33,7 @@ export class LogItem extends LitElement {
 				margin-left: 10px;
 			}
 
-			.colored-value {
+			p {
 				color: var(--blue);
 				display: inline;
 				font-size: 13px;
@@ -46,7 +46,7 @@ export class LogItem extends LitElement {
 		return html`
 		<div @click="${this.listener}" class="w-container">
             <div class="colored-key">${this.dateString}</div>
-            <p class="colored-value">${this.name}</p>
+            <p>${this.name}</p>
 		</div>
 		`;
 	}
