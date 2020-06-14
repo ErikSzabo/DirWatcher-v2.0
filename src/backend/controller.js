@@ -1,4 +1,5 @@
-const { ipcMain, dialog } = require('electron');
+const { ipcMain, dialog, shell } = require('electron');
+const path = require('path');
 const { state } = require('./state');
 const { RootWatcher, SubWatcher, types } = require('./watcher');
 const {
@@ -107,3 +108,11 @@ ipcMain.handle('open:explorer', async () => {
 
 	return result.filePaths[0];
 });
+
+
+/**
+ * Fired when user tries to open log folder.
+ */
+ipcMain.on('open:logs', () => {
+	shell.openPath(path.resolve(__dirname, '../../logs'));
+})

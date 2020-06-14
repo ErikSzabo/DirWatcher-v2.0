@@ -59,7 +59,7 @@ class LogPage extends HTMLElement {
 	}
 
 	listener() {
-		// TODO: main processnek elküldeni, hogy nyissa meg a log mappát.
+		require('electron').ipcRenderer.send("open:logs");
 	}
 }
 

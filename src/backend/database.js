@@ -62,8 +62,8 @@ async function loadAllSubs() {
 }
 
 function createLogFolder() {
-	if (fs.existsSync(path.resolve(__dirname, '../logs'))) return;
-	fs.mkdirSync(path.resolve(__dirname, '../logs'));
+	if (fs.existsSync(path.resolve(__dirname, '../../logs'))) return;
+	fs.mkdirSync(path.resolve(__dirname, '../../logs'));
 }
 
 module.exports = {
