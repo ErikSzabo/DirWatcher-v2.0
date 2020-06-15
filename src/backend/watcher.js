@@ -1,6 +1,5 @@
 const { getRootFolder, getSubFolder, getSubFolders } = require('./database');
 const fs = require('fs');
-const { state } = require('./state');
 
 class Watcher {
 	constructor(id) {
@@ -25,6 +24,7 @@ class RootWatcher extends Watcher {
 	}
 
 	async start() {
+		const { state } = require('./state');
 		const folder = await getRootFolder(this._id);
 		this._watcher = fs.watch(folder.path, async (event, filename) => {
 			if (!fs.existsSync(folder.path + '\\' + filename)) return;
@@ -35,7 +35,6 @@ class RootWatcher extends Watcher {
 					// TODO: log the new file
 					continue;
 				}
-
 				fs.rename(folder.path + '\\' + filename, subFolder.path + '\\' + filename, (error) => {
 					if (state.options.folderMonitoring) {
 						if (error) {
@@ -58,6 +57,7 @@ class SubWatcher extends Watcher {
 	}
 
 	async start() {
+		const { state } = require('./state');
 		const folder = await getSubFolder(this._id);
 		this._watcher = fs.watch(folder.path, (event, filename) => {
 			if (!state.options.folderMonitoring) return;

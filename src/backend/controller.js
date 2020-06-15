@@ -9,7 +9,7 @@ const {
 	getRootByPath,
 	getRootFolder,
 	getSubFolder,
-	getSubFolders,
+	updateSubExtensions,
 	getSubsByPath,
 	deleteRootFolder,
 	deleteSubFolder,
@@ -127,4 +127,19 @@ ipcMain.handle('open:explorer', async () => {
  */
 ipcMain.on('open:logs', () => {
 	shell.openPath(path.resolve(__dirname, '../../logs'));
-})
+});
+
+/**
+ * Fired when user tries to open the extension editor popup.
+ */
+ipcMain.handle('extensions:get', async (e, subID) => {
+	const subFolder = await getSubFolder(subID);
+	return subFolder.extensions;
+});
+
+/**
+ * Fired when user tries to save new extensions for a subfolder.
+ */
+ipcMain.on('extensions:save', (e, subID, extensions) => {
+	updateSubExtensions(subID, extensions);
+});

@@ -30,7 +30,7 @@ async function getRootByPath(path) {
 }
 
 async function getSubFolder(id) {
-	return await rootDB.findOne({ _id: id });
+	return await subDB.findOne({ _id: id });
 }
 
 async function getSubsByPath(path) {
@@ -39,6 +39,10 @@ async function getSubsByPath(path) {
 
 async function getSubFolders(rootID) {
 	return await subDB.find({ parentID: rootID });
+}
+
+async function updateSubExtensions(subID, extensions) {
+	subDB.update({ _id: subID }, { $set: { extensions: extensions } });
 }
 
 function deleteRootFolder(id) {
@@ -76,6 +80,7 @@ module.exports = {
 	getSubFolder,
 	getSubsByPath,
 	getSubFolders,
+	updateSubExtensions,
 	deleteRootFolder,
 	deleteSubFolder,
 	deleteSubFolders,
