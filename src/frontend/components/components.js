@@ -3,6 +3,7 @@ import { OptionItem, OptionsPage } from './options-page.js';
 import { IndexPage, IndexPageElement } from './index-page.js';
 import { RootFolder, SubFolder, DashboradPage } from './dashboard-page.js';
 import { LogItem, LogPage } from './log-page.js';
+import { ExtensionPopup } from './extension-popup.js';
 
 window.customElements.define('c-nav', Nav);
 window.customElements.define('options-page', OptionsPage);
@@ -14,3 +15,4 @@ window.customElements.define('root-folder', RootFolder);
 window.customElements.define('sub-folder', SubFolder);
 window.customElements.define('log-list-item', LogItem);
 window.customElements.define('log-page', LogPage);
+window.customElements.define('ext-popup', ExtensionPopup);

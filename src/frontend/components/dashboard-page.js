@@ -260,9 +260,11 @@ export class SubFolder extends LitElement {
 		`;
 	}
 
-	extListener = () => {
-		// TODO: Send msg to main to open new window which opens a new window for editing
+	extListener = async () => {
+		const extensions = await require('electron').ipcRenderer.invoke('extensions:get', this.id)
+		document.querySelector('main').innerHTML += `<ext-popup subID=${this.id} extensions=${JSON.stringify(extensions)}></ext-popup>`
 	};
+
 	deleteListener = () => {
 		require('electron').ipcRenderer.send('delete:sub', this.id);
 		this.remove();
