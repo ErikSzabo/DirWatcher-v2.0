@@ -9,9 +9,6 @@ const categories = {
 }
 
 export class ExtensionPopup extends LitElement {
-    /**
-     * Kell egy overlay fekete, 75%
-     */
     constructor() {
         super();
         this.extensions = [];
