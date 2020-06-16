@@ -1,5 +1,6 @@
 const { ipcMain, dialog, shell } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const { state } = require('./state');
 const { RootWatcher, SubWatcher, types } = require('./watcher');
 const {
@@ -9,6 +10,7 @@ const {
 	getRootByPath,
 	getRootFolder,
 	getSubFolder,
+	getSubFolders,
 	updateSubExtensions,
 	getSubsByPath,
 	deleteRootFolder,
@@ -142,4 +144,25 @@ ipcMain.handle('extensions:get', async (e, subID) => {
  */
 ipcMain.on('extensions:save', (e, subID, extensions) => {
 	updateSubExtensions(subID, extensions);
+});
+
+
+ipcMain.on('root:organize', async (e, rootID) => {
+	const rootFolder = await getRootFolder(rootID);
+	const subFolders = await getSubFolders(rootID);
+	fs.readdir(rootFolder.path, (err, files) => {
+		for (const file of files) {
+			const extension = file.split('.').pop();
+			for (const subFolder of subFolders) {
+				if (!subFolder.extensions.includes(extension)) {
+					continue;
+				}
+				fs.rename(rootFolder.path + '\\' + file, subFolder.path + '\\' + file, (error) => {
+					if (error) {
+						console.log(error);
+					}
+				});
+			}
+		}
+	})
 });
