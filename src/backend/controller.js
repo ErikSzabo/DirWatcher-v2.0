@@ -12,7 +12,6 @@ const {
 	getSubFolder,
 	getSubFolders,
 	updateSubExtensions,
-	getSubsByPath,
 	deleteRootFolder,
 	deleteSubFolder,
 	deleteSubFolders,
@@ -61,9 +60,9 @@ ipcMain.handle('add:root', async (e, path) => {
  */
 ipcMain.handle('add:sub', async (e, { rootID, path }) => {
 	// Check if already connected to the root
-	const subFolders = await getSubsByPath(path);
-	for (let subFolder of subFolders) {
-		if (subFolder.parentID === rootID) return false;
+	const subFolders = await getSubFolders(rootID);
+	for (const subFolder of subFolders) {
+		if (subFolder.path === path) return false;
 	}
 
 	// Add it to the database
@@ -123,7 +122,6 @@ ipcMain.handle('open:explorer', async () => {
 	return result.filePaths[0];
 });
 
-
 /**
  * Fired when user tries to open log folder.
  */
@@ -146,7 +144,9 @@ ipcMain.on('extensions:save', (e, subID, extensions) => {
 	updateSubExtensions(subID, extensions);
 });
 
-
+/**
+ * Fired when user tries to organize a rootfolder.
+ */
 ipcMain.on('root:organize', async (e, rootID) => {
 	const rootFolder = await getRootFolder(rootID);
 	const subFolders = await getSubFolders(rootID);
