@@ -1,3 +1,4 @@
+const fsp = require('./utils/fsPromises');
 const fs = require('fs');
 const path = require('path');
 const Datastore = require('nedb-promises');
@@ -152,9 +153,12 @@ async function loadAllSubs() {
  * If the logs folder does not exists yet, it will be created
  * by calling this function.
  */
-function createLogFolder() {
-	if (fs.existsSync(path.resolve(__dirname, '../../logs'))) return;
-	fs.mkdirSync(path.resolve(__dirname, '../../logs'));
+async function createLogFolder() {
+	try {
+		await fsp.mkdir(path.resolve(__dirname, '../../logs'));
+	} catch (e) {
+		console.log('Log folder already exists!');
+	}
 }
 
 module.exports = {

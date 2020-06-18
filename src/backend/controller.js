@@ -1,6 +1,7 @@
 const { ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const fsp = require('./utils/fsPromises');
 const { state } = require('./state');
 const { RootWatcher, SubWatcher, types } = require('./watcher');
 const {
@@ -116,7 +117,7 @@ ipcMain.on('change:options', (e, { key, value }) => {
  */
 ipcMain.handle('open:explorer', async () => {
 	const result = await dialog.showOpenDialog({
-		properties: ['openDirectory']
+		properties: [ 'openDirectory' ]
 	});
 
 	return result.filePaths[0];
@@ -150,19 +151,14 @@ ipcMain.on('extensions:save', (e, subID, extensions) => {
 ipcMain.on('root:organize', async (e, rootID) => {
 	const rootFolder = await getRootFolder(rootID);
 	const subFolders = await getSubFolders(rootID);
-	fs.readdir(rootFolder.path, (err, files) => {
-		for (const file of files) {
-			const extension = file.split('.').pop();
-			for (const subFolder of subFolders) {
-				if (!subFolder.extensions.includes(extension)) {
-					continue;
-				}
-				fs.rename(rootFolder.path + '\\' + file, subFolder.path + '\\' + file, (error) => {
-					if (error) {
-						console.log(error);
-					}
-				});
+	const files = await fsp.readdir(rootFolder.path);
+	for (const file of files) {
+		const extension = file.split('.').pop();
+		for (const subFolder of subFolders) {
+			if (!subFolder.extensions.includes(extension)) {
+				continue;
 			}
+			fsp.rename(rootFolder.path + '\\' + file, subFolder.path + '\\' + file);
 		}
-	})
+	}
 });
