@@ -2,6 +2,32 @@ const { getRootFolder, getSubFolder, getSubFolders } = require('./database');
 const fs = require('fs');
 const fsp = require('./utils/fsPromises');
 
+/**
+ * Finds a subfolder which is responsible for
+ * holding the specified extension. If none of the
+ * subfolders meet the requirements, will return
+ * undefined.
+ * 
+ * @param {*} extension 	file extension to look for
+ * @param {*} subFolders 	array of subfolders
+ */
+function findSubFolder(extension, subFolders) {
+	for (const subFolder of subFolders) {
+		if (subFolder.extensions.includes(extension)) {
+			return subFolder;
+		}
+	}
+}
+
+/**
+ * "Abstract" class for watchers. Defines
+ * the basic attributes and behaviors of the watchers.
+ * 
+ * Attributes
+ * 	- _id: this should be identical with the database _id
+ * 	- _watcher: this is an fs watcher, which will be watching
+ * 				the directories.
+ */
 class Watcher {
 	constructor(id) {
 		this._id = id;
@@ -13,64 +39,83 @@ class Watcher {
 			this._watcher.close();
 		}
 	}
-
-	get id() {
-		return this._id;
-	}
 }
 
+/**
+ * Watcher class for Rootfolders.
+ * Has a special start method, which will sort
+ * new files in a root folder into its subfolders based on
+ * the extension of the file.
+ */
 class RootWatcher extends Watcher {
 	constructor(id) {
 		super(id);
 	}
 
 	async start() {
-		const { state } = require('./state');
+		const { logger } = require('./logs');
 		const folder = await getRootFolder(this._id);
 		this._watcher = fs.watch(folder.path, async (event, filename) => {
 			if (!await fsp.exists(folder.path + '\\' + filename)) return;
-			const subFolders = await getSubFolders(this._id);
 			const extension = filename.split('.').pop();
-			for (const subFolder of subFolders) {
-				if (!subFolder.extensions.includes(extension)) {
-					// TODO: log the new file
-					continue;
-				}
-				try {
-					await fsp.rename(folder.path + '\\' + filename, subFolder.path + '\\' + filename);
-					if (state.options.folderMonitoring) {
-						// TODO: log the changes
-					}
-				} catch (e) {
-					// TODO: log the error
-				}
+			const subFolder = findSubFolder(extension, await getSubFolders(this._id));
 
-				return;
+			logger.info(`[ROOT] FILE: ${filename}, moved into this root folder: ${folder.name}!`);
+
+			if (!subFolder) return;
+
+			try {
+				await fsp.rename(folder.path + '\\' + filename, subFolder.path + '\\' + filename);
+				logger.info(`[ROOT] FILE: ${filename} MOVED TO: ${subFolder.path} FROM: ${folder.path}`);
+			} catch (e) {
+				logger.error(`[ROOT] ${e.message}`);
 			}
 		});
 	}
 }
 
+/**
+ * Watcher class for Subfolders.
+ * Has a special start method, which will
+ * log new files and modifications in the
+ * folder.
+ */
 class SubWatcher extends Watcher {
 	constructor(id) {
 		super(id);
 	}
 
 	async start() {
-		const { state } = require('./state');
+		const { logger } = require('./logs');
 		const folder = await getSubFolder(this._id);
-		this._watcher = fs.watch(folder.path, (event, filename) => {
-			if (!state.options.folderMonitoring) return;
-			// TODO: log the changes
+		this._watcher = fs.watch(folder.path, async (event, filename) => {
+			if (event === 'rename') {
+				if (await fsp.exists(folder.path + '\\' + filename)) {
+					logger.info(`[SUB] FILE: ${filename}, moved into this sub folder: ${folder.name}!`);
+				} else {
+					logger.info(`[SUB] FILE: ${filename}, removed from this sub folder: ${folder.name}!`);
+				}
+			} else if (event == 'change') {
+				logger.info(`[SUB] FILE: ${filename}, modified in this subfolder: ${folder.name}!`);
+			}
 		});
 	}
 }
 
+/**
+ * These types are userful when we trying to
+ * add new watchers to the WatcherSystem.
+ */
 const types = {
 	ROOT: 0,
 	SUB: 1
 };
 
+/**
+ * This will store every root and sub watchers separated by each other.
+ * addWatcher will store, and start newly added watchers, while
+ * deleteWatcher will delete and stop the watchers.
+ */
 class WatcherSystem {
 	constructor() {
 		this._root = new Map();

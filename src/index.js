@@ -1,8 +1,8 @@
 const { app, BrowserWindow, Menu, Tray } = require('electron');
 const path = require('path');
-const { state } = require('./backend/state');
 const { RootWatcher, SubWatcher, types } = require('./backend/watcher');
 const controller = require('./backend/controller');
+const { state } = require('./backend/state');
 const { createLogFolder, loadAllRoots, loadAllSubs } = require('./backend/database');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -39,14 +39,14 @@ const createWindow = () => {
 
 	const contextMenu = Menu.buildFromTemplate([
 		{
-			label: 'Open App',
-			click: function () {
+			label: 'Open',
+			click: function() {
 				mainWindow.show();
 			}
 		},
 		{
 			label: 'Quit',
-			click: function () {
+			click: function() {
 				app.quit();
 			}
 		}
@@ -69,7 +69,7 @@ const initWatchers = async () => {
 	for (const watcher of await loadAllSubs()) {
 		state.watchers.addWatcher(types.SUB, new SubWatcher(watcher._id));
 	}
-}
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -100,11 +100,8 @@ app.on('activate', () => {
 // Sets the autostart option before application quits.
 app.on('quit', () => {
 	app.setLoginItemSettings({
-		openAtLogin: state.options.autoStart
+		openAtLogin: store.getState().options.autoStart
 	});
 
 	state.watchers.stopAll();
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
