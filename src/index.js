@@ -100,7 +100,7 @@ app.on('activate', () => {
 // Sets the autostart option before application quits.
 app.on('quit', () => {
 	app.setLoginItemSettings({
-		openAtLogin: store.getState().options.autoStart
+		openAtLogin: state.options.autoStart
 	});
 
 	state.watchers.stopAll();
