@@ -161,6 +161,25 @@ async function createLogFolder() {
 	}
 }
 
+/**
+ * Reads all the filenames inside the log folders and creates a
+ * name/date object from them.
+ * 
+ * @returns logs
+ */
+async function getLogs() {
+	const filenames = await fsp.readdir(path.resolve(__dirname, '../../logs'));
+	const logs = [];
+	for (const filename of filenames) {
+		if (!filename.includes('.log')) continue;
+		logs.push({
+			name: filename,
+			date: filename.substr(11, 10)
+		});
+	}
+	return logs;
+}
+
 module.exports = {
 	loadOptions,
 	saveOptions,
@@ -176,5 +195,6 @@ module.exports = {
 	deleteSubFolders,
 	loadAllRoots,
 	loadAllSubs,
-	createLogFolder
+	createLogFolder,
+	getLogs
 };

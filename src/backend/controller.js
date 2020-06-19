@@ -17,7 +17,8 @@ const {
 	deleteSubFolder,
 	deleteSubFolders,
 	loadAllRoots,
-	loadAllSubs
+	loadAllSubs,
+	getLogs
 } = require('./database');
 
 /**
@@ -161,4 +162,11 @@ ipcMain.on('root:organize', async (e, rootID) => {
 			fsp.rename(rootFolder.path + '\\' + file, subFolder.path + '\\' + file);
 		}
 	}
+});
+
+/**
+ * Fired when user navigates to the logs page.
+ */
+ipcMain.handle('get:logs', async () => {
+	return await getLogs();
 });

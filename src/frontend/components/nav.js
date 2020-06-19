@@ -86,15 +86,18 @@ export class Nav extends LitElement {
 		`;
 	}
 
-	logsListener() {
-		// TODO: make this dynamic
-		document.querySelector('main').innerHTML = `
-				<log-page>
-					<log-list-item name="test log file name" dateString="2020/06/06"></log-list-item> 
-					<log-list-item name="test log file name" dateString="2020/06/06"></log-list-item> 
-					<log-list-item name="test log file name" dateString="2020/06/06"></log-list-item> 
-    			</log-page>
-		`;
+	async logsListener() {
+		for (const child of document.querySelector('main').children) {
+			child.remove();
+		}
+		const logs = await require('electron').ipcRenderer.invoke('get:logs');
+		const logPage = document.createElement('log-page');
+		for (const log of logs) {
+			logPage.innerHTML += `
+				<log-list-item name="${log.name}" dateString="${log.date}"></log-list-item>
+			`;
+		}
+		document.querySelector('main').appendChild(logPage);
 	}
 
 	async dashboardListener() {
