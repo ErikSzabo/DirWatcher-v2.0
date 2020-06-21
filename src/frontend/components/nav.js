@@ -7,58 +7,62 @@ export class Nav extends LitElement {
 
 	static get styles() {
 		return css`
-			.nav-menu {
+			nav {
 				display: flex;
+				height: 55px;
 				width: 100%;
-				height: 75px;
 				align-items: center;
-				background-color: coral;
-				background-color: var(--custom-black);
+				box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
 			}
 
-			.nav-item {
-				flex: 1;
+			.front-nav {
+				display: flex;
 			}
 
-			.nav-btns {
-				display: grid;
-				grid-template-columns: 1fr 1fr 1fr;
-				grid-gap: 40px;
-				padding-right: 30px;
+			.sm-menus {
+				display: flex;
+				width: 50%;
+				align-items: center;
 			}
 
 			.menu-item {
+				cursor: pointer;
+				margin-left: 20px;
+			}
+
+			.big-menu-item {
+				position: absolute;
+				right: 30px;
+				padding: 12px;
+				background: #24292e;
 				color: white;
-				text-transform: uppercase;
-				font-size: 18px;
+				font-weight: bold;
+				top: -10px;
 				cursor: pointer;
 			}
 
-			.nav-title {
-				font-size: 25px;
-				padding-left: 30px;
-				font-weight: 600;
-				color: white;
+			.logo {
+				width: 132px;
+				height: 30px;
+				margin-left: 30px;
+				margin-top: 10px;
 				cursor: pointer;
-			}
-
-			.nav-title > div > span {
-				font-weight: normal;
-				font-size: 20px;
 			}
 		`;
 	}
 
 	render() {
 		return html`
-			<nav class="nav-menu">
-				<div @click="${this.indexListener}" class="nav-title nav-item"><div>DirWatcher <span>v2.0</span></div></div>
-				<div class="nav-btns nav-item">
-					<p @click="${this.logsListener}" class="menu-item logs-menu">Logs</p>
-					<p @click="${this.optionListener}" class="menu-item options-menu">Options</p>
-					<p @click="${this.dashboardListener}" class="menu-item dashboard-menu">Dashborad</p>
+		<nav>
+			<div class="front-nav">
+				<img @click="${this.indexListener}" src="../images/logo.svg" class="logo menu-item">
+				<div class="sm-menus">
+					<p @click="${this.logsListener}" class="menu-item">Logs</p>
+					<p @click="${this.optionListener}" class="menu-item">Options</p>
 				</div>
-			</nav>
+			</div>
+			<p @click="${this.dashboardListener}" class="big-menu-item">Dashboard</p>
+    	</nav>
 		`;
 	}
 
