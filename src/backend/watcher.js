@@ -124,10 +124,10 @@ class WatcherSystem {
 
 	addWatcher(type, watcher) {
 		if (type === types.ROOT) {
-			this._root.set(watcher.id, watcher);
+			this._root.set(watcher._id, watcher);
 			watcher.start();
 		} else if (type === types.SUB) {
-			this._sub.set(watcher.id, watcher);
+			this._sub.set(watcher._id, watcher);
 			watcher.start();
 		}
 	}
