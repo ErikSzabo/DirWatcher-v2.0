@@ -110,11 +110,11 @@ export class Nav extends LitElement {
 		const subData = await ipcRenderer.invoke('get:all:sub');
 		let html = '<dashboard-page id="dashboard">';
 
-		for (let root of rootData) {
-			html += `<root-folder name="${root.name}" id="${root._id}">`;
-			for (let sub of subData) {
+		for (const root of rootData) {
+			html += `<root-folder name="${root.name}" id="${root._id}" path="${root.path}">`;
+			for (const sub of subData) {
 				if (sub.parentID === root._id) {
-					html += `<sub-folder class="hide" name="${sub.name}" parentID="${root._id}" id="${sub._id}"></sub-folder>`;
+					html += `<sub-folder class="hide" name="${sub.name}" parentID="${root._id}" id="${sub._id}" path="${sub.path}"></sub-folder>`;
 				}
 			}
 			html += '</root-folder>';
