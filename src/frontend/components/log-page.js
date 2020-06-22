@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
+import { LitElement, html } from 'https://unpkg.com/lit-element?module';
 import { logItem, logPage } from './styles.js';
 
 /**
