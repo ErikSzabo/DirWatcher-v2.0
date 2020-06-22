@@ -541,3 +541,78 @@ export const optionItem = () => {
 		}
 	`;
 };
+
+/**
+ * Styles for the log page.
+ */
+export const logPage = () => {
+	return css`
+		.container {
+			width: 100%;
+			margin: auto;
+		}
+
+		.start {
+			margin-bottom: 20px;
+			display: flex;
+			align-items: center;
+			height: 65px;
+			background-color: var(--custom-black);
+		}
+
+		.start > p {
+			color: white;
+		}
+
+		.logs {
+			width: 90%;
+			margin: auto;
+		}
+
+		.open {
+			padding: 10px;
+			background-color: #1fa0ff;
+			color: white;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			display: block;
+			margin-right: 20px;
+			margin-left: 30px;
+			border-radius: 6px;
+		}
+	`;
+};
+
+/**
+ * Styles for logs in the log page.
+ */
+export const logItem = () => {
+	return css`
+		.w-container {
+			margin: 10px auto;
+			height: 45px;
+			border: 1px solid #b4b4b4;
+			display: flex;
+			align-items: center;
+			background-color: white;
+		}
+
+		.colored-key {
+			color: var(--blue);
+			font-weight: bold;
+			font-size: 13px;
+			background-color: var(--light-blue);
+			display: inline;
+			padding: 8px;
+			margin-left: 10px;
+		}
+
+		p {
+			color: var(--blue);
+			display: inline;
+			font-size: 13px;
+			margin-left: 20px;
+		}
+	`;
+};

@@ -1,5 +1,9 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
+import { logItem, logPage } from './styles.js';
 
+/**
+ * Component to display logs inside the logs folder.
+ */
 export class LogItem extends LitElement {
 	constructor() {
 		super();
@@ -13,33 +17,7 @@ export class LogItem extends LitElement {
 	}
 
 	static get styles() {
-		return css`
-			.w-container {
-				margin: 10px auto;
-				height: 45px;
-				border: 1px solid #b4b4b4;
-				display: flex;
-				align-items: center;
-				background-color: white;
-			}
-
-			.colored-key {
-				color: var(--blue);
-				font-weight: bold;
-				font-size: 13px;
-				background-color: var(--light-blue);
-				display: inline;
-				padding: 8px;
-				margin-left: 10px;
-			}
-
-			p {
-				color: var(--blue);
-				display: inline;
-				font-size: 13px;
-				margin-left: 20px;
-			}
-		`;
+		return logItem();
 	}
 
 	render() {
@@ -52,42 +30,21 @@ export class LogItem extends LitElement {
 	}
 
 	listener() {
-		// TODO: main processnek elküldeni a nevét, hogy nyissa meg a fájlt.
+		// TODO: send msg to the main controller to open up the selected log.
 	}
 }
 
+/**
+ * Component to display the default logs page.
+ * User can open up the logs folder from here.
+ */
 export class LogPage extends LitElement {
 	constructor() {
 		super();
 	}
 
 	static get styles() {
-		return css`
-			.container {
-				width: 90%;
-				margin: auto;
-				margin-top: 20px;
-			}
-
-			.start {
-				width: 90%;
-				margin-bottom: 20px;
-				display: flex;
-				align-items: center;
-			}
-
-			.open {
-				float: left;
-				width: 100px;
-				padding: 8px;
-				background-color: var(--custom-black);
-				color: white;
-				font-size: 14px;
-				cursor: pointer;
-				display: block;
-				margin-right: 20px;
-			}
-		`;
+		return logPage();
 	}
 
 	render() {
@@ -96,12 +53,19 @@ export class LogPage extends LitElement {
             <div class="start">
                 <div @click="${this.listener}" class="open">Open log folder</div>
                 <p>Opens up the folder which holds the log files.</p>
-            </div>
-            <slot />
+			</div>
+			<div class="logs">
+				<slot />
+			</div>
         </div>
 		`;
 	}
 
+	/**
+	 * Listener called when user clicks on "open logs folder"
+	 * in the logs page. It will open up the logs folder which
+	 * stores all the logs.
+	 */
 	listener() {
 		require('electron').ipcRenderer.send('open:logs');
 	}
