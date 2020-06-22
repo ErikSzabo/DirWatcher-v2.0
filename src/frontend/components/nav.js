@@ -1,54 +1,21 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
+import { LitElement, html } from 'https://unpkg.com/lit-element?module';
+import { nav } from './styles.js';
 
+/**
+ * Main navigation of the application.
+ * Contains navigation for the following pages:
+ * - Logs
+ * - Options
+ * - Dashboard
+ * - Index
+ */
 export class Nav extends LitElement {
 	constructor() {
 		super();
 	}
 
 	static get styles() {
-		return css`
-			nav {
-				display: flex;
-				height: 55px;
-				width: 100%;
-				align-items: center;
-				box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
-			}
-
-			.front-nav {
-				display: flex;
-			}
-
-			.sm-menus {
-				display: flex;
-				width: 50%;
-				align-items: center;
-			}
-
-			.menu-item {
-				cursor: pointer;
-				margin-left: 20px;
-			}
-
-			.big-menu-item {
-				position: absolute;
-				right: 30px;
-				padding: 12px;
-				background: #24292e;
-				color: white;
-				font-weight: bold;
-				top: -10px;
-				cursor: pointer;
-			}
-
-			.logo {
-				width: 132px;
-				height: 30px;
-				margin-left: 30px;
-				margin-top: 10px;
-				cursor: pointer;
-			}
-		`;
+		return nav();
 	}
 
 	render() {
@@ -66,6 +33,10 @@ export class Nav extends LitElement {
 		`;
 	}
 
+	/**
+	 * Will be called when user clicks on the logo.
+	 * It will load the index/welcome page.
+	 */
 	indexListener() {
 		document.querySelector('main').innerHTML = `
 				<index-page>
@@ -75,6 +46,10 @@ export class Nav extends LitElement {
 		`;
 	}
 
+	/**
+	 * Will be called when user clicks on the options button.
+	 * It will load the options page.
+	 */
 	optionListener() {
 		document.querySelector('main').innerHTML = `
 				<options-page>
@@ -90,6 +65,10 @@ export class Nav extends LitElement {
 		`;
 	}
 
+	/**
+	 * Will be called when user clicks on the logs button.
+	 * It will load the logs page.
+	 */
 	async logsListener() {
 		for (const child of document.querySelector('main').children) {
 			child.remove();
@@ -104,6 +83,10 @@ export class Nav extends LitElement {
 		document.querySelector('main').appendChild(logPage);
 	}
 
+	/**
+	 * Will be called when user clicks on the dashboard button.
+	 * It will load the dashboard page.
+	 */
 	async dashboardListener() {
 		const { ipcRenderer } = require('electron');
 		const rootData = await ipcRenderer.invoke('get:all:root');
