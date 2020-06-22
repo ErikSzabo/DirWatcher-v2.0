@@ -76,7 +76,7 @@ export class DashboradPage extends LitElement {
 			inputField.value = '';
 			if (!folder) return;
 			document.querySelector('#dashboard').innerHTML += `
-				<root-folder name="${folder.name}" id="${folder._id}"></root-folder>
+				<root-folder name="${folder.name}" id="${folder._id}" path="${folder.path}"></root-folder>
 			`;
 		});
 	};

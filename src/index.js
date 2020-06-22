@@ -19,7 +19,7 @@ const createWindow = () => {
 		width: 1400,
 		height: 600,
 		title: 'DirWatcher',
-		resizable: false,
+		resizable: true,
 		icon: path.join(__dirname, 'images/icon.ico'),
 		webPreferences: {
 			nodeIntegration: true

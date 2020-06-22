@@ -340,7 +340,7 @@ export const subFolder = () => {
 			width: 680px;
 			display: flex;
 			margin-left: 60px;
-			box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
+			box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.3);
 		}
 
 		.sub-buttons {
@@ -384,7 +384,7 @@ export const rootFolder = () => {
 			display: flex;
 			margin-left: 30px;
 			margin-top: 30px;
-			box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
+			box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
 			border-top: 4px solid #930002;
 			flex-wrap: wrap;
 		}
