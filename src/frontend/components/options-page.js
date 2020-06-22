@@ -93,7 +93,7 @@ export class OptionsPage extends LitElement {
 					this includes folder monitoring (if enabled) and
 					folder organizing.
 				</option-item>
-				<option-item id="autoWatchRoot" title="Auto watch for sub folders">
+				<option-item id="autoWatchSub" title="Auto watch for sub folders">
 					Automatically start watching the sub folders. Sub
 					folders can only use folder monitoring, so if that is
 					not enabled, this options wouldn't change anything
