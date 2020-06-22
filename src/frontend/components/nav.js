@@ -52,16 +52,7 @@ export class Nav extends LitElement {
 	 */
 	optionListener() {
 		document.querySelector('main').innerHTML = `
-				<options-page>
-					<option-item id="folderMonitoring" title="Folder Monitoring">
-						Enables folder monitoring, which means, you can keep track of the changes 
-						in your watched folders. New log file will be created in every new day. You can 
-						view logs in the logs folder or at the logs page.
-					</option-item>
-					<option-item id="autoStart" title="Auto Start">
-						You can start DirWatcher instantly when your operating system loaded up.
-					</option-item>
-				</options-page>
+				<options-page></options-page>
 		`;
 	}
 

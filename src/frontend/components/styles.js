@@ -483,3 +483,61 @@ export const nav = () => {
 		}
 	`;
 };
+
+/**
+ * Styles for options page.
+ */
+export const optionPage = () => {
+	return css`
+		.container {
+			width: 90%;
+			position: absolute;
+			left: 50%;
+			top: 100px;
+			transform: translateX(-50%);
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-gap: 20px;
+		}
+	`;
+};
+
+/**
+ * Styles for option inside options page.
+ */
+export const optionItem = () => {
+	return css`
+		.title {
+			font-size: 18px;
+			font-weight: bold;
+			margin-bottom: 5px;
+			background: #24292e;
+			color: white;
+			padding: 10px 20px;
+		}
+
+		.description {
+			font-size: 14px;
+			text-align: justify;
+		}
+
+		.item {
+			flex-direction: column;
+			box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+			height: 190px;
+		}
+
+		.sub {
+			padding: 20px;
+			padding-top: 10px;
+		}
+
+		#option-selector {
+			width: 100px;
+			padding: 3px;
+			margin-top: 5px;
+			position: relative;
+			left: 0;
+		}
+	`;
+};

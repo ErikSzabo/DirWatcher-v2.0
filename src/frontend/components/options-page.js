@@ -1,6 +1,17 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
+import { optionPage, optionItem } from './styles.js';
 
+/**
+ * Component for options. These options will go inside
+ * the options page. For now this only features true and
+ * false option states.
+ * id should be identical to the options.json key.
+ */
 export class OptionItem extends LitElement {
+	/**
+	 * Based on options.json enable or disable will
+	 * load dinamically.
+	 */
 	constructor() {
 		super();
 		require('electron').ipcRenderer.invoke('get:options').then((options) => {
@@ -13,36 +24,13 @@ export class OptionItem extends LitElement {
 
 	static get properties() {
 		return {
-			title: { type: String }
+			title: { type: String },
+			id: { type: String }
 		};
 	}
 
 	static get styles() {
-		return css`
-			.title {
-				font-size: 18px;
-				font-weight: bold;
-				margin-bottom: 5px;
-			}
-
-			.description {
-				font-size: 14px;
-				text-align: justify;
-			}
-
-			.item {
-				flex-direction: column;
-				margin: 40px 0;
-			}
-
-			#option-selector {
-				width: 100px;
-				padding: 3px;
-				margin-top: 5px;
-				position: relative;
-				left: 0;
-			}
-		`;
+		return optionItem();
 	}
 
 	render() {
@@ -63,6 +51,11 @@ export class OptionItem extends LitElement {
 		`;
 	}
 
+	/**
+	 * Listener will be called when user change from enable to diasble
+	 * and vice versa. Will send a message to to main controller, which will
+	 * handle the change.
+	 */
 	listener = () => {
 		const key = this.id;
 		const value = this.shadowRoot.querySelector('#option-selector').value === 'e' ? true : false;
@@ -70,27 +63,42 @@ export class OptionItem extends LitElement {
 	};
 }
 
+/**
+ * Component for the options page. Will be loaded
+ * when user clicks on options in the navigation.
+ * Holds all of the options.
+ */
 export class OptionsPage extends LitElement {
 	constructor() {
 		super();
 	}
 
 	static get styles() {
-		return css`
-			.container {
-				width: 90%;
-				position: absolute;
-				left: 50%;
-				top: 70px;
-				transform: translateX(-50%);
-			}
-		`;
+		return optionPage();
 	}
 
 	render() {
 		return html`
 			<div class="container">
-				<slot />
+				<option-item id="folderMonitoring" title="Folder Monitoring">
+					Enables folder monitoring, which means, you can keep track of the changes 
+					in your watched folders. New log file will be created in every new day. You can 
+					view logs in the logs folder or at the logs page.
+				</option-item>
+				<option-item id="autoStart" title="Auto Start">
+					You can start DirWatcher instantly when your operating system loaded up.
+				</option-item>
+				<option-item id="autoWatchRoot" title="Auto watch for root folders">
+					Automatically start watching the root folders,
+					this includes folder monitoring (if enabled) and
+					folder organizing.
+				</option-item>
+				<option-item id="autoWatchRoot" title="Auto watch for sub folders">
+					Automatically start watching the sub folders. Sub
+					folders can only use folder monitoring, so if that is
+					not enabled, this options wouldn't change anything
+					from a user perspective.
+				</option-item>
 			</div>
 		`;
 	}
