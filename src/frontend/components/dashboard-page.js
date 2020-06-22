@@ -45,7 +45,7 @@ export class DashboradPage extends LitElement {
 			</div>
 			<slot />
 		</div>
-    `;
+    	`;
 	}
 
 	/**
@@ -212,7 +212,7 @@ export class SubFolder extends LitElement {
 				<div @click="${this.deleteListener}" class="sub-btn sb-del"><img src="../images/trash-alt-solid.svg"></div>
 			</div>
 		</div>
-    `;
+    	`;
 	}
 
 	/**
