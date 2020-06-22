@@ -6,11 +6,11 @@ const Datastore = require('nedb-promises');
 /**
  * Database to store root folders.
  */
-const rootDB = Datastore.create({ filename: path.resolve(__dirname, 'root.db'), autoload: true });
+const rootDB = Datastore.create({ filename: path.resolve(__dirname, '../../store/root.db'), autoload: true });
 /**
  * Database to store sub folders.
  */
-const subDB = Datastore.create({ filename: path.resolve(__dirname, 'sub.db'), autoload: true });
+const subDB = Datastore.create({ filename: path.resolve(__dirname, '../../store/sub.db'), autoload: true });
 
 /**
  * Loads and returns the options from the options.json file.
@@ -18,7 +18,7 @@ const subDB = Datastore.create({ filename: path.resolve(__dirname, 'sub.db'), au
  * @returns options object
  */
 function loadOptions() {
-	return JSON.parse(fs.readFileSync(path.resolve(__dirname, 'options.json')));
+	return JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../store/options.json')));
 }
 
 /**
@@ -27,7 +27,7 @@ function loadOptions() {
  * @param {*} options options object which will be saved
  */
 function saveOptions(options) {
-	fs.writeFileSync(path.resolve(__dirname, 'options.json'), JSON.stringify(options));
+	fs.writeFileSync(path.resolve(__dirname, '../../store/options.json'), JSON.stringify(options));
 }
 
 /**
