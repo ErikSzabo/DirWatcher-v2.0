@@ -101,7 +101,7 @@ export class RootFolder extends LitElement {
 	}
 
 	static get styles() {
-		return rootFolder();
+		return [ rootFolder(), global() ];
 	}
 
 	render() {
@@ -197,7 +197,7 @@ export class SubFolder extends LitElement {
 	}
 
 	static get styles() {
-		return subFolder();
+		return [ subFolder(), global() ];
 	}
 
 	render() {

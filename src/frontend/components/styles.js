@@ -237,6 +237,10 @@ export const dashboard = () => {
 			box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
 		}
 
+		.dash-container {
+			margin-bottom: 30px;
+		}
+
 		.add-folder {
 			width: 350px;
 			height: 75px;
@@ -306,6 +310,28 @@ export const dashboard = () => {
 			width: 90px;
 			font-weight: 500;
 		}
+
+		@media (max-width: 670px) {
+			.watch-toggle {
+				position: relative;
+				width: 350px;
+			}
+
+			.add-folder {
+				margin: 20px 10px;
+			}
+
+			.switch {
+				color: #24292e;
+				font-weight: bold;
+			}
+
+			.dash-area {
+				height: 100px;
+				justify-content: center;
+				margin-bottom: 100px;
+			}
+		}
 	`;
 };
 
@@ -369,6 +395,20 @@ export const subFolder = () => {
 		.sb-del > img {
 			color: #b80000 !important;
 		}
+
+		@media (max-width: 780px) {
+			.sub-buttons {
+				position: relative;
+				padding-left: 15px;
+				padding-top: 10px;
+			}
+
+			.sub-folder {
+				flex-direction: column;
+				width: 80%;
+				margin: auto;
+			}
+		}
 	`;
 };
 
@@ -431,6 +471,21 @@ export const rootFolder = () => {
 		.sm-path {
 			font-size: 10px;
 			font-weight: 400;
+		}
+
+		@media (max-width: 780px) {
+			.root-buttons {
+				position: relative;
+				padding-left: 30px;
+				padding-top: 10px;
+			}
+
+			.root-folder {
+				flex-direction: column;
+				width: 90%;
+				margin: auto;
+				margin-top: 30px;
+			}
 		}
 	`;
 };
@@ -498,6 +553,7 @@ export const optionPage = () => {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			grid-gap: 20px;
+			margin-bottom: 30px;
 		}
 	`;
 };
@@ -524,7 +580,6 @@ export const optionItem = () => {
 		.item {
 			flex-direction: column;
 			box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
-			height: 190px;
 		}
 
 		.sub {

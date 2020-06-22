@@ -16,8 +16,11 @@ let appIcon, mainWindow;
 const createWindow = () => {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
-		width: 1400,
-		height: 600,
+		maxHeight: 600,
+		maxWidth: 820,
+		width: 820,
+		minWidth: 550,
+		minHeight: 400,
 		title: 'DirWatcher',
 		resizable: true,
 		icon: path.join(__dirname, 'images/icon.ico'),
