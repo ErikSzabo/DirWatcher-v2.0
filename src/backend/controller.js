@@ -184,6 +184,9 @@ ipcMain.on('watch:toggle', (e, type) => {
 	}
 });
 
+/**
+ * Fired when dashboard loads up.
+ */
 ipcMain.handle('get:iswatch', () => {
 	return state.watch;
 });
