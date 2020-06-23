@@ -1,8 +1,8 @@
 {
-	"name": "dirwatcher2.0",
-	"productName": "dirwatcher2.0",
-	"version": "1.0.0",
-	"description": "My Electron application description",
+	"name": "dirwatcher",
+	"productName": "dirwatcher",
+	"version": "2.0.0",
+	"description": "Electron application to organize and monitor folders.",
 	"main": "src/index.js",
 	"scripts": {
 		"start": "electron-forge start",
@@ -31,9 +31,7 @@
 				},
 				{
 					"name": "@electron-forge/maker-zip",
-					"platforms": [
-						"darwin"
-					]
+					"platforms": [ "darwin" ]
 				},
 				{
 					"name": "@electron-forge/maker-deb",
