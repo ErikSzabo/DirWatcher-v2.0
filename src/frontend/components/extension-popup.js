@@ -1,113 +1,90 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit-element?module';
-
-const categories = {
-    images: ["jpg", "png", "gif", "psd", "bmp", "ico", "svg"],
-    musics: ["mp3", "wav"],
-    videos: ["mp4", "avi", "mkv"],
-    documents: ["doc", "docx", "pdf", "ppt", "xls"],
-    programming: ["java", "py", "js", "css", "html", "c", "h"]
-}
+import { extensions } from './styles.js';
 
 export class ExtensionPopup extends LitElement {
-    constructor() {
-        super();
-        this.extensions = [];
-    }
+	constructor() {
+		super();
+		this.extensions = [];
+	}
 
-    static get properties() {
-        return {
-            extensions: { type: Array },
-            subID: { type: String }
-        }
-    }
+	static get properties() {
+		return {
+			extensions: { type: Array },
+			subID: { type: String }
+		};
+	}
 
-    render() {
-        return html`
-        <div @click="${this.exitPopup}" class="overlay">
-            <div class="container">
-                <h3>Extension Manager</h3>
-                <h5>Current extensions: ${this.extensions.join(", ")}</h5>
-                <p>Assigning extensions to a subfolder means that, every file with the given extensions placed in the root folder, will be moved to the subfolder if possible.</p>
-                <p>Write your extensions here (separated by comas):</p>
-                <input type="text" value="${this.extensions.join(", ")}" placeholder="png, jpg, gif">
-                <div class="buttons">
-                    <div @click="${this.save}" class="save btn">Save</div>
-                    <div @click="${this.exitPopup}" class="cancel btn">Cancel</div>
+	render() {
+		return html`
+        <div @click="${this.exitPopup}" class="popup overlay">
+            <div class="content">
+                <div @click="${this.exitPopup}" class="cancel exit">
+                    <div class="line1 exit"></div>
+                    <div class="line2 exit"></div>
+                </div>
+                <div class="title">Extensions editor</div>
+                <div class="description">Enter your file extensions (separated by comas)</div>
+                <div class="form">
+                    <input type="text" placeholder="jpg, png, gif" value="${this.extensions.join(', ')}">
+                    <div @click="${this.save}" class="button">Save</div>
+                </div>
+                <div class="footer">
+                    Click anywhere out of this popup to exit.
                 </div>
             </div>
         </div>
          `;
-    }
+	}
 
-    static get styles() {
-        return css`
-            .overlay {
-                position: absolute;
-                top: 75px;
-                width: 100vw;
-                height: calc(100vh - 75px);
-                background-color: rgba(0, 0, 0, 0.8); 
-            }
+	static get styles() {
+		return extensions();
+	}
 
-            .container {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 400px;
-                height: 320px;
-                padding: 20px;
-                background: var(--light-blue);
-                text-align: justify;
-            }
+	/**
+     * Closes the popup, if user clicked on the X or anywhere
+     * out of the popup.
+     * 
+     * @param {*} e dom event
+     */
+	exitPopup = (e) => {
+		if (e.target.classList.contains('exit') || e.target.classList.contains('overlay')) {
+			this.remove();
+		}
+	};
 
-            .buttons {
-                display: flex;
-            }
+	/**
+     * Saves the new file extensions.
+     */
+	save = () => {
+		// Get the user input extensions
+		const extensions = formatExtensions(this.shadowRoot.querySelector('input').value);
+		// Send to the controller to save, and remove the popup
+		require('electron').ipcRenderer.send('extensions:save', this.subID, extensions);
+		this.remove();
+	};
+}
 
-            .btn {
-                width: 80px;
-                padding: 5px;
-                cursor: pointer;
-                margin-right: 10px; 
-                text-align: center;
-            }
+/**
+ * Formats the give extensions.
+ * - nothing or just spaces should be an empty array
+ * - just one word without comas should be a one element array
+ * - if there are comas, then split them into an array by comas.
+ * 
+ * @param {*} extensions user input extensions
+ */
+function formatExtensions(extensions) {
+	let newExts = [];
 
-            .save {
-                background: lightblue;
-            }
-
-            .cancel {
-                background: gray;
-            }
-
-            input {
-                margin-bottom: 10px;
-            }
-        `;
-    }
-
-    exitPopup = (e) => {
-        if (e.target.classList.contains('cancel') || e.target.classList.contains('overlay')) {
-            this.remove();
-        }
-    }
-
-    save = () => {
-        // Get the user input extensions
-        let extensions = this.shadowRoot.querySelector('input').value;
-        if (extensions.includes(',')) {
-            // If there is multiple, split by comas
-            extensions = extensions.split(',');
-        } else {
-            // If there is only one, make it an array
-            extensions = [extensions];
-        }
-        // trim the spaces
-        extensions = extensions.map(el => el.trim());
-        // Send to the controller to save, and remove the popup
-        require('electron').ipcRenderer.send('extensions:save', this.subID, extensions);
-        this.remove();
-    }
-
+	if (extensions.trim() === '') {
+		return newExts;
+	} else if (extensions.includes(',')) {
+		// If there is multiple, split by comas
+		newExts = extensions.split(',');
+	} else {
+		// If there is only one, make it an array
+		newExts = [ extensions ];
+	}
+	// trim the spaces
+	newExts = newExts.map((el) => el.trim());
+	return newExts;
 }

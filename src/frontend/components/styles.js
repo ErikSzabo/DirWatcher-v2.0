@@ -728,3 +728,107 @@ export const indexItem = () => {
 		}
 	`;
 };
+
+/**
+ * Styles for the extension editor popup inside the
+ * dashboard page subfolder editor button.
+ */
+export const extensions = () => {
+	return css`
+		.popup {
+			position: fixed;
+			width: 100vw;
+			height: 100vh;
+			background-color: rgba(0, 0, 0, 0.7);
+			z-index: 100;
+			top: 0;
+		}
+
+		.content {
+			position: absolute;
+			width: 300px;
+			height: 230px;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: white;
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.cancel {
+			width: 30px;
+			height: 30px;
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			cursor: pointer;
+		}
+
+		.line1,
+		.line2 {
+			background-color: black;
+			width: 2px;
+			height: 20px;
+			display: inline-block;
+			position: absolute;
+		}
+
+		.line1 {
+			transform: rotate(45deg);
+		}
+
+		.line2 {
+			transform: rotate(-45deg);
+		}
+
+		.title,
+		.description {
+			display: flex;
+			justify-content: center;
+			position: relative;
+		}
+
+		.title {
+			font-weight: bold;
+			font-size: 22px;
+			text-transform: uppercase;
+			top: 40px;
+		}
+
+		.description {
+			width: 240px;
+			top: 45px;
+			font-size: 14px;
+		}
+
+		.form {
+			display: flex;
+			position: relative;
+			top: 55px;
+		}
+
+		.form > input {
+			width: 170px;
+			padding: 8px;
+		}
+
+		.button {
+			font-size: 14px;
+			padding: 8px 10px;
+			background-color: black;
+			color: white;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+		.footer {
+			width: 250px;
+			position: relative;
+			top: 70px;
+			font-size: 12px;
+		}
+	`;
+};
