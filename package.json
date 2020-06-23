@@ -26,7 +26,9 @@
 				{
 					"name": "@electron-forge/maker-squirrel",
 					"config": {
-						"name": "DirWatcher"
+						"name": "DirWatcher",
+						"setupIcon": "src/images/icon.ico",
+						"loadingGif": "src/images/install.gif"
 					}
 				},
 				{
