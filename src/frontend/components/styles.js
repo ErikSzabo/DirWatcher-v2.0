@@ -672,3 +672,59 @@ export const logItem = () => {
 		}
 	`;
 };
+
+/**
+ * Styles for the index/welcome page.
+ */
+export const indexPage = () => {
+	return css`
+		div {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 465px;
+			transform: translate(-50%, -50%);
+		}
+
+		h1 {
+			font-size: 40px;
+			width: 465px;
+		}
+	`;
+};
+
+/**
+ * Styles for the index page bottom elements.
+ */
+export const indexItem = () => {
+	return css`
+		.w-container {
+			margin: auto;
+			margin-top: 10px;
+			width: 400px;
+			height: 45px;
+			border: 1px solid #b4b4b4;
+			display: flex;
+			align-items: center;
+			background-color: white;
+		}
+
+		.colored-key {
+			color: var(--blue);
+			font-weight: bold;
+			font-size: 13px;
+			background-color: var(--light-blue);
+			display: inline;
+			padding: 8px;
+			margin-left: 10px;
+		}
+
+		a {
+			color: var(--blue);
+			display: inline;
+			font-size: 13px;
+			margin-left: 20px;
+			text-decoration: none;
+		}
+	`;
+};
