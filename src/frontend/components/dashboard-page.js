@@ -8,6 +8,10 @@ import { global, customCheckbox, dashboard, rootFolder, subFolder } from './styl
 export class DashboradPage extends LitElement {
 	constructor() {
 		super();
+		require('electron').ipcRenderer.invoke('get:iswatch').then((iswatch) => {
+			this.shadowRoot.querySelector('#ckbx-style-1-1').checked = iswatch.sub;
+			this.shadowRoot.querySelector('#ckbx-style-1-2').checked = iswatch.root;
+		});
 	}
 
 	static get styles() {
@@ -30,14 +34,14 @@ export class DashboradPage extends LitElement {
 					<div class="switch">
 						<p class="switch-item">SubWatch</p>
 						<div class="ckbx-style-1">
-							<input type="checkbox" id="ckbx-style-1-1" value="0" name="ckbx-style-1">
+							<input @change="${this.watchToggleListener}" type="checkbox" id="ckbx-style-1-1" value="0" name="ckbx-style-1">
 							<label for="ckbx-style-1-1"></label>
 						</div>
 					</div>
 					<div class="switch">
 						<p class="switch-item">RootWatch</p>
 						<div class="ckbx-style-1">
-							<input type="checkbox" id="ckbx-style-1-2" value="0" name="ckbx-style-2">
+							<input @change="${this.watchToggleListener}" type="checkbox" id="ckbx-style-1-2" value="0" name="ckbx-style-2">
 							<label for="ckbx-style-1-2"></label>
 						</div>
 					</div>
@@ -79,6 +83,21 @@ export class DashboradPage extends LitElement {
 				<root-folder name="${folder.name}" id="${folder._id}" path="${folder.path}"></root-folder>
 			`;
 		});
+	};
+
+	/**
+	 * Toggle the watch switch.
+	 * 0 - toggle root watchers
+	 * 1 - toggle sub watchers
+	 * 
+	 * @param {*} e dom event 
+	 */
+	watchToggleListener = (e) => {
+		if (e.target.getAttribute('id') === 'ckbx-style-1-1') {
+			require('electron').ipcRenderer.send('watch:toggle', 1);
+		} else if (e.target.getAttribute('id') === 'ckbx-style-1-2') {
+			require('electron').ipcRenderer.send('watch:toggle', 0);
+		}
 	};
 }
 

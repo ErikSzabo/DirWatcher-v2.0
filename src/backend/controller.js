@@ -1,39 +1,23 @@
 const { ipcMain, dialog, shell } = require('electron');
-const path = require('path');
-const fs = require('fs');
-const fsp = require('./utils/fsPromises');
 const { state } = require('./state');
 const { RootWatcher, SubWatcher, types } = require('./watcher');
-const {
-	saveOptions,
-	saveRootFolder,
-	saveSubFolder,
-	getRootByPath,
-	getRootFolder,
-	getSubFolder,
-	getSubFolders,
-	updateSubExtensions,
-	deleteRootFolder,
-	deleteSubFolder,
-	deleteSubFolders,
-	loadAllRoots,
-	loadAllSubs,
-	getLogs,
-	readLog
-} = require('./database');
+const path = require('path');
+const fsp = require('./utils/fsPromises');
+const db = require('./database');
+const { stat } = require('fs');
 
 /**
  * Fired when application starts to initalize the UI.
  */
 ipcMain.handle('get:all:root', async (e) => {
-	return await loadAllRoots();
+	return await db.loadAllRoots();
 });
 
 /**
  * Fired when application starts to initalize the UI.
  */
 ipcMain.handle('get:all:sub', async (e) => {
-	return await loadAllSubs();
+	return await db.loadAllSubs();
 });
 
 /**
@@ -43,13 +27,13 @@ ipcMain.handle('get:all:sub', async (e) => {
  */
 ipcMain.handle('add:root', async (e, path) => {
 	// Check if it's already exists
-	const result = await getRootByPath(path);
+	const result = await db.getRootByPath(path);
 	if (result.length > 0) return false;
 
 	// Add it to the database
 	const splitPath = path.split('\\');
 	const name = splitPath[splitPath.length - 1];
-	const rootFolder = await saveRootFolder({ path: path, name: name });
+	const rootFolder = await db.saveRootFolder({ path: path, name: name });
 
 	// Create a watcher for the folder
 	state.watchers.addWatcher(types.ROOT, new RootWatcher(rootFolder._id));
@@ -63,7 +47,7 @@ ipcMain.handle('add:root', async (e, path) => {
  */
 ipcMain.handle('add:sub', async (e, { rootID, path }) => {
 	// Check if already connected to the root
-	const subFolders = await getSubFolders(rootID);
+	const subFolders = await db.getSubFolders(rootID);
 	for (const subFolder of subFolders) {
 		if (subFolder.path === path) return false;
 	}
@@ -71,7 +55,7 @@ ipcMain.handle('add:sub', async (e, { rootID, path }) => {
 	// Add it to the database
 	const splitPath = path.split('\\');
 	const name = splitPath[splitPath.length - 1];
-	const subFolder = await saveSubFolder({ path: path, name: name, parentID: rootID, extensions: [] });
+	const subFolder = await db.saveSubFolder({ path: path, name: name, parentID: rootID, extensions: [] });
 
 	// Create a watcher for the folder
 	state.watchers.addWatcher(types.SUB, new SubWatcher(subFolder._id));
@@ -85,8 +69,8 @@ ipcMain.handle('add:sub', async (e, { rootID, path }) => {
  */
 ipcMain.on('delete:root', (e, id) => {
 	state.watchers.deleteWatcher(types.ROOT, id);
-	deleteRootFolder(id);
-	deleteSubFolders(id);
+	db.deleteRootFolder(id);
+	db.deleteSubFolders(id);
 });
 
 /**
@@ -95,7 +79,7 @@ ipcMain.on('delete:root', (e, id) => {
  */
 ipcMain.on('delete:sub', (e, id) => {
 	state.watchers.deleteWatcher(types.SUB, id);
-	deleteSubFolder(id);
+	db.deleteSubFolder(id);
 });
 
 /**
@@ -111,7 +95,7 @@ ipcMain.handle('get:options', () => {
  */
 ipcMain.on('change:options', (e, { key, value }) => {
 	state.options[key] = value;
-	saveOptions(state.options);
+	db.saveOptions(state.options);
 });
 
 /**
@@ -136,7 +120,7 @@ ipcMain.on('open:logs', () => {
  * Fired when user tries to open the extension editor popup.
  */
 ipcMain.handle('extensions:get', async (e, subID) => {
-	const subFolder = await getSubFolder(subID);
+	const subFolder = await db.getSubFolder(subID);
 	return subFolder.extensions;
 });
 
@@ -144,15 +128,15 @@ ipcMain.handle('extensions:get', async (e, subID) => {
  * Fired when user tries to save new extensions for a subfolder.
  */
 ipcMain.on('extensions:save', (e, subID, extensions) => {
-	updateSubExtensions(subID, extensions);
+	db.updateSubExtensions(subID, extensions);
 });
 
 /**
  * Fired when user tries to organize a rootfolder.
  */
 ipcMain.on('root:organize', async (e, rootID) => {
-	const rootFolder = await getRootFolder(rootID);
-	const subFolders = await getSubFolders(rootID);
+	const rootFolder = await db.getRootFolder(rootID);
+	const subFolders = await db.getSubFolders(rootID);
 	const files = await fsp.readdir(rootFolder.path);
 	for (const file of files) {
 		const extension = file.split('.').pop();
@@ -169,7 +153,7 @@ ipcMain.on('root:organize', async (e, rootID) => {
  * Fired when user navigates to the logs page.
  */
 ipcMain.handle('get:logs', async () => {
-	return await getLogs();
+	return await db.getLogs();
 });
 
 /**
@@ -177,4 +161,29 @@ ipcMain.handle('get:logs', async () => {
  */
 ipcMain.on('log:open', async (e, filename) => {
 	shell.openPath(path.resolve(__dirname, `../../logs/${filename}`));
+});
+
+/**
+ * Fired when user turns on or off watching.
+ */
+ipcMain.on('watch:toggle', (e, type) => {
+	if (type == types.ROOT) {
+		if (state.watch.root) {
+			state.watchers.stopAll(types.ROOT);
+		} else {
+			state.watchers.startAll(types.ROOT);
+		}
+		state.watch.root = !state.watch.root;
+	} else if (type == types.SUB) {
+		if (state.watch.sub) {
+			state.watchers.stopAll(types.SUB);
+		} else {
+			state.watchers.startAll(types.SUB);
+		}
+		state.watch.sub = !state.watch.sub;
+	}
+});
+
+ipcMain.handle('get:iswatch', () => {
+	return state.watch;
 });

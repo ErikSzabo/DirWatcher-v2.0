@@ -66,11 +66,15 @@ const createWindow = () => {
 
 const initWatchers = async () => {
 	for (const watcher of await loadAllRoots()) {
-		state.watchers.addWatcher(types.ROOT, new RootWatcher(watcher._id));
+		const rootWatcher = new RootWatcher(watcher._id);
+		if (state.watch.root) rootWatcher.start();
+		state.watchers.addWatcher(types.ROOT, rootWatcher);
 	}
 
 	for (const watcher of await loadAllSubs()) {
-		state.watchers.addWatcher(types.SUB, new SubWatcher(watcher._id));
+		const subWatcher = new SubWatcher(watcher._id);
+		if (state.watch.sub) subWatcher.start();
+		state.watchers.addWatcher(types.SUB, subWatcher);
 	}
 };
 

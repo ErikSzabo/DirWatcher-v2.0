@@ -108,7 +108,8 @@ class SubWatcher extends Watcher {
  */
 const types = {
 	ROOT: 0,
-	SUB: 1
+	SUB: 1,
+	ALL: 3
 };
 
 /**
@@ -125,10 +126,8 @@ class WatcherSystem {
 	addWatcher(type, watcher) {
 		if (type === types.ROOT) {
 			this._root.set(watcher._id, watcher);
-			watcher.start();
 		} else if (type === types.SUB) {
 			this._sub.set(watcher._id, watcher);
-			watcher.start();
 		}
 	}
 
@@ -146,21 +145,27 @@ class WatcherSystem {
 		}
 	}
 
-	startAll() {
-		for (const watcher of this._root.values()) {
-			watcher.start();
-		}
-		for (const watcher of this._sub.values()) {
-			watcher.start();
+	startAll(type = types.ALL) {
+		if (type === types.ROOT || type === types.ALL) {
+			for (const watcher of this._root.values()) {
+				watcher.start();
+			}
+		} else if (type === types.SUB || type === types.ALL) {
+			for (const watcher of this._sub.values()) {
+				watcher.start();
+			}
 		}
 	}
 
-	stopAll() {
-		for (const watcher of this._root.values()) {
-			watcher.stop();
-		}
-		for (const watcher of this._sub.values()) {
-			watcher.stop();
+	stopAll(type = types.ALL) {
+		if (type === types.ROOT || type === types.ALL) {
+			for (const watcher of this._root.values()) {
+				watcher.stop();
+			}
+		} else if (type === types.SUB || type === types.ALL) {
+			for (const watcher of this._sub.values()) {
+				watcher.stop();
+			}
 		}
 	}
 }
