@@ -18,7 +18,8 @@ const {
 	deleteSubFolders,
 	loadAllRoots,
 	loadAllSubs,
-	getLogs
+	getLogs,
+	readLog
 } = require('./database');
 
 /**
@@ -169,4 +170,11 @@ ipcMain.on('root:organize', async (e, rootID) => {
  */
 ipcMain.handle('get:logs', async () => {
 	return await getLogs();
+});
+
+/**
+ * Fired when user wants to open a log file.
+ */
+ipcMain.on('log:open', async (e, filename) => {
+	shell.openPath(path.resolve(__dirname, `../../logs/${filename}`));
 });

@@ -651,6 +651,7 @@ export const logItem = () => {
 			display: flex;
 			align-items: center;
 			background-color: white;
+			cursor: pointer;
 		}
 
 		.colored-key {

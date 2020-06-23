@@ -29,8 +29,12 @@ export class LogItem extends LitElement {
 		`;
 	}
 
+	/**
+	 * Sends a message to the main controller to open up
+	 * this log file.
+	 */
 	listener() {
-		// TODO: send msg to the main controller to open up the selected log.
+		require('electron').ipcRenderer.send('log:open', this.name);
 	}
 }
 
