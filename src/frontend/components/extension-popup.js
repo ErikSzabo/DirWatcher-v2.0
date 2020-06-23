@@ -1,6 +1,9 @@
 import { LitElement, html } from 'https://unpkg.com/lit-element?module';
 import { extensions } from './styles.js';
 
+/**
+ * Component to edit sub folders extensions.
+ */
 export class ExtensionPopup extends LitElement {
 	constructor() {
 		super();
