@@ -7,6 +7,8 @@ or even more...
 You can sort your files from "root" folders into "sub" folders by their extensions. You can even monitor your folders activity, but... well this thing
 is still not that great.
 
+![preview](/src/images/preview.png)
+
 # How to use?
 
 There are two types of folders: root and sub. Root folders can have multiple sub folders (but can't have the same sub folder twice) You can specify extensions for the subfolders. Then if watching is enabled, DirWatcher will move the files from root folder to its subfolders. (Only when file is created or dropped to the root folder) For example:
